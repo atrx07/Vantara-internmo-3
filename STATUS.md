@@ -5,7 +5,7 @@
 ## STEP 01 — Bootstrap + Raw Ingestion
 
 - Authorization: owner explicitly approved STEP 01 on 2026-08-30.
-- Scope status: IMPLEMENTATION AND VALIDATION COMPLETE; COMMIT/PUSH PENDING.
+- Scope status: `STEP_COMPLETE_WAITING_FOR_APPROVAL`.
 - Scope boundary: no STEP 02 cleaning, snapshots, labels, feature engineering, taxonomy, splitting, interim data, or processed data was implemented.
 
 ### Environment and dependencies
@@ -109,8 +109,8 @@
 - Bound remote: `origin` -> `https://github.com/atrx07/Vantara-internmo-3.git` (fetch and push URLs).
 - Connectivity: PASS after approved network access.
 - Fetch: PASS.
-- Remote refs/history: EMPTY — `git ls-remote` returned no refs; no remote commits, heads, or tags exist.
-- Remote default branch: NONE / unknown because the remote is empty.
+- Remote refs/history: `refs/heads/main` exists and contains the green STEP 01 history.
+- Remote default branch: `main`.
 - Local/remote history conflict: NONE.
 - Pushes during STEP 00: NONE.
 
@@ -119,7 +119,7 @@
 - Project status: INCOMPLETE
 - Current milestone: M1 — Data Ready
 - Current step: STEP 01 — Bootstrap + Raw Ingestion
-- Step state: `VALIDATED_PENDING_COMMIT_AND_PUSH`
+- Step state: `STEP_COMPLETE_WAITING_FOR_APPROVAL`
 - Last owner-approved step: STEP 01
 - M0 Governance Ready: PASS
 - M1 Data Ready: IN_PROGRESS
@@ -142,19 +142,20 @@
 
 - Commits created during STEP 00: NONE.
 - Refs/heads pushed during STEP 00: NONE.
-- STEP 01 implementation commit: PENDING.
-- STEP 01 pushes: PENDING.
+- STEP 01 implementation commit: `4c152c199216ad74a04476776ed849b34d6f552a` — `step-01: bootstrap project and validate raw ingestion`.
+- STEP 01 implementation push: PASS — created `refs/heads/main` on `origin` at `4c152c199216ad74a04476776ed849b34d6f552a`; local `HEAD` and `origin/main` matched immediately after fetch verification.
+- STEP 01 state-finalization commit: this status record is committed separately after the implementation push; Git assigns its hash after the file content is fixed, so the exact hash/pushed ref is recorded in the chat handoff.
 
 ## Blockers / warnings
 
 - Blocking PRD/governance/dataset/repository conflict: NONE.
 - Raw data protection: PASS — both workbook paths are ignored and untracked.
-- Warning: remote has no default branch because it is empty; the first green STEP 01 push to local `main` will establish `origin/main`.
+- Remote branch: PASS — `origin/main` is established and is the remote default branch.
 - Warning: DOCX visual rendering was unavailable; structural/content/hash inspection completed successfully.
 - Warning: use command-scoped Git `safe.directory` in this Codex environment; no global exception was installed.
 
 ## Readiness and authorization boundary
 
-- STEP 01 implementation/validation: COMPLETE; commit and push are the remaining authorized actions.
+- STEP 01 implementation, validation, and implementation push: COMPLETE.
 - STEP 02 is NOT AUTHORIZED.
-- After a green push, next authorized action: WAIT FOR OWNER APPROVAL.
+- Next authorized action: WAIT FOR OWNER APPROVAL.
