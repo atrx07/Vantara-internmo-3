@@ -1,6 +1,6 @@
 # Vantara Customer Behavior Prediction Platform
 
-Vantara is a governed, batch-oriented retail analytics prototype. The repository is built through owner-approved roadmap steps; current implementation scope is limited to STEP 01 raw ingestion and validation.
+Vantara is a governed, batch-oriented retail analytics prototype. The repository is built through owner-approved roadmap steps; the implemented data foundation currently covers immutable ingestion plus STEP 02 cleaning, point-in-time snapshots, targets, features, taxonomy, partitioning, and preprocessing contracts.
 
 ## STEP 01 development setup
 
@@ -25,7 +25,15 @@ Place the source workbook at `data/raw/online_retail_II.xlsx`, verify its hash, 
 python -m src.data.loader --config config/config.yaml
 ```
 
-Run STEP 01 quality gates:
+Run the STEP 02 data foundation after validating the immutable source:
+
+```powershell
+python -m src.data.step02_pipeline --config config/config.yaml
+```
+
+The command writes ignored, reproducible local outputs under `data/interim/` and `data/processed/`. It removes exact duplicate lines only; all other source rows remain auditable through explicit quality flags. Predictive features use transactions strictly before their configured snapshot cutoff, and population-learned artifacts use training customers only.
+
+Run the current quality gates:
 
 ```powershell
 python governance/tools/verify_reference_lock.py

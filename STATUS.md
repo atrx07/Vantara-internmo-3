@@ -2,6 +2,64 @@
 
 > MUTABLE STATE FILE. Codex may edit this file. It must contain observed facts and evidence, never optimistic assumptions.
 
+## STEP 02 — Cleaning + Snapshot + Feature Pipeline
+
+- Authorization: owner explicitly approved continuation into STEP 02 on 2026-08-30.
+- Scope status: IMPLEMENTATION AND VALIDATION COMPLETE; COMMIT/PUSH PENDING.
+- Scope boundary: no STEP 03 notebooks, EDA, correlation/VIF decision, final feature-schema freeze, or `src.pipeline` orchestration was implemented.
+- Pre-step HEAD: `01081363d01bfb45e9d4d60404fb2c43c9e313d4`.
+
+### Cleaning and interim data
+
+- Full raw input rows: `1,067,371`; exact duplicate invoice lines removed: `34,335`; cleaned/audit rows: `1,033,036`.
+- Missing-customer rows retained and flagged: `235,151`.
+- Return rows retained and flagged: `22,496`; cancelled-invoice rows: `19,104`.
+- Non-positive-price rows retained and flagged: `6,019`.
+- Administrative/non-product rows retained and flagged: `5,821`; configured exact-code and regex rules are version-controlled in `config/config.yaml`.
+- Statistical IQR outlier rows retained and flagged: `81,830`; likely domain-error rows at configured absolute limits: `0`.
+- IQR thresholds were fitted only on training-customer history before the CLV cutoff: quantity `[-28, 42]`, price `[-6.25, 11.25]`; fixed domain limits are absolute quantity `100,000` and price `50,000`.
+- Product descriptions are normalized deterministically while original descriptions remain preserved.
+- Clean output: ignored local `data/interim/transactions_clean.parquet`; outlier audit: ignored local `data/interim/outlier_audit.parquet`.
+- Clean-table checks: 24 columns, zero exact duplicates, chronological order PASS, returns never count as positive purchase events.
+
+### Snapshots, targets, and features
+
+- Observation end derived from data: `2011-12-09 12:50:00`.
+- Canonical churn cutoff: `2011-09-10 12:50:00`; feature history is strictly earlier; 90-day target window is fully observable.
+- Canonical CLV cutoff: `2011-06-12 12:50:00`; feature history is strictly earlier; 180-day forward net-revenue proxy is clipped at zero.
+- Eligible shared modeling population: `4,952` customers with a valid positive merchandise purchase before the earlier CLV cutoff.
+- Churn feature table: `4,952 x 57`; churn rate `0.5714862682`; labels contain only `0/1`.
+- CLV feature table: `4,952 x 57`; positive-target rate `0.5179725363`; minimum target `0.0`.
+- Required RFM/monetary, basket, timing/trend, seasonality, return, markdown proxy, engagement, training-only product-frequency, and full product-category affinity families are present.
+- Full affinity vector: 30 frozen taxonomy categories plus explicit unknown-product affinity; every eligible customer vector sums to `1.0`.
+- Engagement percentiles use the locked 40/30/30 RFM weights and are fitted on training customers only.
+- Scaled linear/distance/ANN and unscaled tree/boosting preprocessing contracts were fitted separately using the same `3,466` training customers and 52 numerical features.
+
+### Product artifacts and split
+
+- Customer split version: `vantara-customer-split-v1`, seed `42`, persisted once under ignored `data/processed/`.
+- Split counts: train `3,466`, validation `742`, test `744`; `4,952` unique customers; all partitions are disjoint.
+- Product taxonomy version: `vantara-taxonomy-v1`; training customers/history only; TF-IDF word/bigram -> TruncatedSVD -> MiniBatchKMeans.
+- All locked candidate cluster counts `12, 16, 20, 24, 30` were evaluated; selected `k=30` by the configured silhouette/balance rule.
+- Frozen taxonomy rows: `4,219`; training frequency-encoded products: `4,210`; eligible reference-price products with at least five observations: `3,665`.
+- Markdown proxy uses `price <= 0.90 * training-history median reference price`; it is not represented as causal discount sensitivity.
+- Generated split, feature, taxonomy, reference-price, frequency-encoding, preprocessing, and metadata outputs remain ignored and untracked by default.
+
+### Leakage and deterministic validation
+
+- Explicit tests PASS for strict point-in-time cutoff, target-window exclusion, future-transaction insertion, future-insensitive frozen taxonomy/reference prices, validation/test-insensitive engagement percentiles and preprocessors, training-only outlier thresholds, and customer partition disjointness.
+- LSTM grouped-fold, SMOTE-boundary, and final-test-access tests remain correctly deferred until those systems exist in Steps 04–06.
+- Two full immutable-workbook executions completed successfully and produced identical content fingerprints:
+  - cleaned transactions: `0ee6e6ce421848cf3fa2a76071f6366b8a8554af108ee91f3758e7863fe1cbc3`;
+  - customer split: `8177d4d9015d49303d2aae9fc86a2ed56e3db847643dff1f5bb7cf698cf960d3`;
+  - churn features: `80ee96733c58019b9fa78fb919e7346b5546d084c6240950f6b4eb0d0edf174e`;
+  - CLV features: `96cab6da3e212ecc899bf6f7d5aebc58c7f4255580e127f60fc99cba46ab3c19`;
+  - product taxonomy: `3a161eadc36888a66eabad0b05d470abf812e5ca6e44efee331e0d6fefdfffc8`.
+- `pytest --cov=src --cov-report=term-missing --cov-fail-under=70 -q`: PASS — `29 passed`, source coverage `85.36%`.
+- Ruff: PASS; Black check: PASS (`27` files unchanged); `pip check`: PASS; compileall: PASS.
+- Governance reference lock: PASS — 30 immutable files verified.
+- Environment warning: Joblib could not query physical cores through WMIC and used logical-core count; both full runs and deterministic fingerprints passed.
+
 ## STEP 01 — Bootstrap + Raw Ingestion
 
 - Authorization: owner explicitly approved STEP 01 on 2026-08-30.
@@ -118,9 +176,9 @@
 
 - Project status: INCOMPLETE
 - Current milestone: M1 — Data Ready
-- Current step: STEP 01 — Bootstrap + Raw Ingestion
-- Step state: `STEP_COMPLETE_WAITING_FOR_APPROVAL`
-- Last owner-approved step: STEP 01
+- Current step: STEP 02 — Cleaning + Snapshot + Feature Pipeline
+- Step state: `VALIDATED_PENDING_COMMIT_AND_PUSH`
+- Last owner-approved step: STEP 02
 - M0 Governance Ready: PASS
 - M1 Data Ready: IN_PROGRESS
 - M2 Intelligence Ready: NOT_STARTED
@@ -157,5 +215,6 @@
 ## Readiness and authorization boundary
 
 - STEP 01 implementation, validation, and implementation push: COMPLETE.
-- STEP 02 is NOT AUTHORIZED.
-- Next authorized action: WAIT FOR OWNER APPROVAL.
+- STEP 02 implementation and validation: COMPLETE; commit and push are the remaining authorized actions.
+- STEP 03 is NOT AUTHORIZED.
+- After a green push, next authorized action: WAIT FOR OWNER APPROVAL.

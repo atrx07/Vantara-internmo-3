@@ -86,3 +86,84 @@ def sample_project(tmp_path: Path, source_frames: dict[str, pd.DataFrame]) -> tu
     config_path = tmp_path / "config.yaml"
     config_path.write_text(yaml.safe_dump(config, sort_keys=False), encoding="utf-8")
     return tmp_path, config_path
+
+
+@pytest.fixture()
+def cleaning_config() -> dict[str, object]:
+    """Return a compact governed cleaning configuration for unit tests."""
+    return {
+        "administrative_stock_codes": ["POST", "M", "D"],
+        "administrative_stock_code_patterns": ["^TEST", "^GIFT_"],
+        "outliers": {
+            "iqr_multiplier": 3.0,
+            "quantity_absolute_domain_limit": 100000,
+            "price_domain_limit": 50000.0,
+        },
+    }
+
+
+@pytest.fixture()
+def step02_transactions(cleaning_config: dict[str, object]) -> pd.DataFrame:
+    """Create identified multi-customer transactions suitable for STEP 02 tests."""
+    from src.data.cleaning import clean_transactions
+
+    records: list[list[object]] = []
+    products = [f"P{index:02d}" for index in range(12)]
+    for customer_index in range(8):
+        customer_id = f"CUST{customer_index}"
+        for order_index in range(6):
+            timestamp = pd.Timestamp("2021-01-05") + pd.Timedelta(
+                days=customer_index + order_index * 25
+            )
+            stock_code = products[(customer_index + order_index) % len(products)]
+            records.append(
+                [
+                    f"{customer_index}{order_index:03d}",
+                    stock_code,
+                    f"Product family {stock_code}",
+                    order_index + 1,
+                    timestamp,
+                    10.0 + (order_index % 3),
+                    customer_id,
+                    "United Kingdom",
+                ]
+            )
+    records.extend(
+        [
+            [
+                "C900",
+                "P00",
+                "Product family P00",
+                -1,
+                "2021-04-01",
+                10.0,
+                "CUST0",
+                "United Kingdom",
+            ],
+            ["9001", "POST", "Postage", 1, "2021-03-01", 5.0, "CUST0", "United Kingdom"],
+            ["9002", "P01", "  product   FAMILY p01 ", 1, "2021-03-02", 0.0, None, "France"],
+        ]
+    )
+    frame = pd.DataFrame(
+        records,
+        columns=[
+            "invoice",
+            "stock_code",
+            "description",
+            "quantity",
+            "invoice_date",
+            "price",
+            "customer_id",
+            "country",
+        ],
+    )
+    frame["invoice"] = frame["invoice"].astype("string")
+    frame["stock_code"] = frame["stock_code"].astype("string")
+    frame["description"] = frame["description"].astype("string")
+    frame["quantity"] = frame["quantity"].astype("Int64")
+    frame["invoice_date"] = pd.to_datetime(frame["invoice_date"])
+    frame["price"] = frame["price"].astype("float64")
+    frame["customer_id"] = frame["customer_id"].astype("string")
+    frame["country"] = frame["country"].astype("string")
+    cleaned, _ = clean_transactions(frame, cleaning_config=cleaning_config)
+    return cleaned

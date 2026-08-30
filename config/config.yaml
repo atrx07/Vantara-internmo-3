@@ -42,3 +42,71 @@ data:
     price: 0.0
     customer_id: 0.30
     country: 0.0
+
+cleaning:
+  interim_transactions: data/interim/transactions_clean.parquet
+  outlier_audit: data/interim/outlier_audit.parquet
+  administrative_stock_codes:
+    - ADJUST
+    - ADJUST2
+    - AMAZONFEE
+    - B
+    - BANK CHARGES
+    - C2
+    - CRUK
+    - D
+    - DOT
+    - GIFT_0001_10
+    - GIFT_0001_20
+    - GIFT_0001_30
+    - GIFT_0001_40
+    - GIFT_0001_50
+    - M
+    - PADS
+    - POST
+    - S
+    - SP1002
+    - TEST001
+    - TEST002
+  administrative_stock_code_patterns:
+    - "^ADJUST"
+    - "^AMAZONFEE$"
+    - "^BANK CHARGES$"
+    - "^GIFT_"
+    - "^TEST"
+  outliers:
+    iqr_multiplier: 3.0
+    quantity_absolute_domain_limit: 100000
+    price_domain_limit: 50000.0
+
+snapshots:
+  churn_horizon_days: 90
+  clv_horizon_days: 180
+  trend_window_days: 90
+
+features:
+  markdown_price_ratio: 0.90
+  markdown_min_observations: 5
+  taxonomy:
+    version: vantara-taxonomy-v1
+    candidate_clusters: [12, 16, 20, 24, 30]
+    max_tfidf_features: 5000
+    svd_components: 50
+    silhouette_sample_size: 2000
+    min_cluster_share: 0.01
+  split:
+    version: vantara-customer-split-v1
+    train_fraction: 0.70
+    validation_fraction: 0.15
+    test_fraction: 0.15
+    seed: 42
+
+outputs:
+  customer_split: data/processed/customer_split.parquet
+  churn_features: data/processed/customer_features_churn.parquet
+  clv_features: data/processed/customer_features_clv.parquet
+  product_taxonomy: data/processed/product_taxonomy.parquet
+  product_reference_prices: data/processed/product_reference_prices.parquet
+  product_frequency_encoding: data/processed/product_frequency_encoding.parquet
+  preprocessing_artifacts: data/processed/preprocessing_contracts.joblib
+  step02_metadata: data/processed/step02_metadata.json
