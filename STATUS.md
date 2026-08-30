@@ -5,7 +5,7 @@
 ## STEP 02 — Cleaning + Snapshot + Feature Pipeline
 
 - Authorization: owner explicitly approved continuation into STEP 02 on 2026-08-30.
-- Scope status: IMPLEMENTATION AND VALIDATION COMPLETE; COMMIT/PUSH PENDING.
+- Scope status: `STEP_COMPLETE_WAITING_FOR_APPROVAL`.
 - Scope boundary: no STEP 03 notebooks, EDA, correlation/VIF decision, final feature-schema freeze, or `src.pipeline` orchestration was implemented.
 - Pre-step HEAD: `01081363d01bfb45e9d4d60404fb2c43c9e313d4`.
 
@@ -177,7 +177,7 @@
 - Project status: INCOMPLETE
 - Current milestone: M1 — Data Ready
 - Current step: STEP 02 — Cleaning + Snapshot + Feature Pipeline
-- Step state: `VALIDATED_PENDING_COMMIT_AND_PUSH`
+- Step state: `STEP_COMPLETE_WAITING_FOR_APPROVAL`
 - Last owner-approved step: STEP 02
 - M0 Governance Ready: PASS
 - M1 Data Ready: IN_PROGRESS
@@ -203,6 +203,9 @@
 - STEP 01 implementation commit: `4c152c199216ad74a04476776ed849b34d6f552a` — `step-01: bootstrap project and validate raw ingestion`.
 - STEP 01 implementation push: PASS — created `refs/heads/main` on `origin` at `4c152c199216ad74a04476776ed849b34d6f552a`; local `HEAD` and `origin/main` matched immediately after fetch verification.
 - STEP 01 state-finalization commit: this status record is committed separately after the implementation push; Git assigns its hash after the file content is fixed, so the exact hash/pushed ref is recorded in the chat handoff.
+- STEP 02 implementation commit: `bf28920275119181040ebb2920ba0b68f6d52b48` — `step-02: implement cleaning snapshots and feature pipeline`.
+- STEP 02 implementation push: PASS — advanced `refs/heads/main` from `01081363d01bfb45e9d4d60404fb2c43c9e313d4` to `bf28920275119181040ebb2920ba0b68f6d52b48`.
+- STEP 02 state-finalization commit: this status record is committed separately after the implementation push; its exact hash and pushed ref are recorded in the chat handoff because a commit cannot contain its own hash.
 
 ## Blockers / warnings
 
@@ -215,6 +218,6 @@
 ## Readiness and authorization boundary
 
 - STEP 01 implementation, validation, and implementation push: COMPLETE.
-- STEP 02 implementation and validation: COMPLETE; commit and push are the remaining authorized actions.
+- STEP 02 implementation, validation, and implementation push: COMPLETE.
 - STEP 03 is NOT AUTHORIZED.
-- After a green push, next authorized action: WAIT FOR OWNER APPROVAL.
+- Next authorized action: WAIT FOR OWNER APPROVAL.
