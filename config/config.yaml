@@ -1,0 +1,44 @@
+project:
+  name: Vantara Customer Behavior Prediction Platform
+  python_version: "3.11"
+  random_seed: 42
+
+logging:
+  level: INFO
+
+data:
+  raw_workbook: data/raw/online_retail_II.xlsx
+  expected_sha256: bcbe73b35f5b7babf197fb0cb983a11f5d9ff929078d4aa53d171b1f2df2e980
+  sheets:
+    Year 2009-2010: 525461
+    Year 2010-2011: 541910
+  source_columns:
+    - Invoice
+    - StockCode
+    - Description
+    - Quantity
+    - InvoiceDate
+    - Price
+    - Customer ID
+    - Country
+  canonical_columns:
+    Invoice: invoice
+    StockCode: stock_code
+    Description: description
+    Quantity: quantity
+    InvoiceDate: invoice_date
+    Price: price
+    Customer ID: customer_id
+    Country: country
+  expected_date_range:
+    minimum: "2009-12-01 07:45:00"
+    maximum: "2011-12-09 12:50:00"
+  maximum_null_rates:
+    invoice: 0.0
+    stock_code: 0.0
+    description: 0.01
+    quantity: 0.0
+    invoice_date: 0.0
+    price: 0.0
+    customer_id: 0.30
+    country: 0.0

@@ -1,0 +1,40 @@
+[project]
+name = "vantara-customer-behavior"
+version = "0.1.0"
+description = "Vantara customer behavior prediction platform"
+requires-python = ">=3.11,<3.12"
+
+[tool.black]
+line-length = 100
+target-version = ["py311"]
+extend-exclude = '''
+/(
+    \.git
+  | \.venv
+  | governance
+)/
+'''
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+extend-exclude = ["governance"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "ANN"]
+
+[tool.pytest.ini_options]
+addopts = "-ra --strict-config --strict-markers"
+testpaths = ["tests"]
+markers = [
+  "integration: exercises the canonical local source workbook",
+]
+
+[tool.coverage.run]
+branch = true
+source = ["src"]
+
+[tool.coverage.report]
+fail_under = 70
+show_missing = true
+skip_covered = false

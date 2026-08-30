@@ -1,0 +1,40 @@
+{
+  "files": {
+    "AGENTS.md": "a5a0bd14135d88f2af0bcf0ecba6701ef98c961ef89ed7504f2d624a94e4137d",
+    "PACK_MANIFEST.md": "ee2093cf58fa4fa467e88f2520e8ce505f36a6fdf0c0c87369ec86733590d6aa",
+    "README_GOVERNANCE.md": "6bfef93b734b34af0de38e8b4e22e7c4307ff2a81fba4c097356b779467f6314",
+    "governance/reference/ACCEPTANCE_MATRIX.md": "b6cc0a560b9b1670643c6ee9268de76c622ec10459d5ac35742d278bc7964aa8",
+    "governance/reference/ARCHITECTURE.md": "152bbe1dc83366096c0fd49980e21a1c53eab1e11dc5ff212d306bc8c7787c3b",
+    "governance/reference/BACKEND_FRONTEND_DB_CHECKLIST.md": "b2aeb7777eb18f9adb68c5030a9643ea1d2bea6da4f0f9ba0cb5a0e4e1c4c942",
+    "governance/reference/BACKEND_SPEC.md": "e998fdc856c56fd335823a2d99a16a32520973ef93a6c5d9a2224516ef2aa29a",
+    "governance/reference/CODE_STANDARDS.md": "0b666bc3256f937056e929a85e303f8b92523bfb9ba4f3eb84c6bc6abd5d6799",
+    "governance/reference/DATABASE_SPEC.md": "a85f13651655520e18a83d62b254eddb8c83038b3bdd73183f2edaa3e18fd8c8",
+    "governance/reference/DATASET_MANIFEST.md": "c9041bf27252772423c83d24f45b62302f190881c80ebc4df3701d8f9bf81762",
+    "governance/reference/DATA_CONTRACT.md": "9a8228376ebfa6af408a687ff4de5d793c442c71a882390bc878c6a188325f11",
+    "governance/reference/DECISIONS_LOCK.md": "1588934eb91ecc49783f6685eb802e688e1b44c5bbe89a97131be03e185e57ba",
+    "governance/reference/FEATURE_CONTRACT.md": "0c6ef90f6b915cda3e34d467b0d1867c425a5e28283a0247f6babcb449c5c556",
+    "governance/reference/FILE_HANDLING.md": "251e7ac2576e86eba350bc2765a8c5ad18aceabd6dd09112f0a3f9a24cca390f",
+    "governance/reference/FRONTEND_SPEC.md": "dd08080996f888507b04ba06a84a4d5ad4522526689fc3ce3f572135f97b5978",
+    "governance/reference/GIT_WORKFLOW.md": "843ce1e1d0a498bfa0bc41cbe89ab57dbea02f3c41de04e66e4bf0147b6dd2b1",
+    "governance/reference/GOVERNANCE_INDEX.md": "895d25efeeda3f91fc7eca8c244abc4fb3a45bbeb95b874c490b66a0c4a64ba5",
+    "governance/reference/MODELING_SPEC.md": "c78e538266f4fc47550d635ebbec90dfd87391379062eeeb15f04df0b7bdb59c",
+    "governance/reference/PRD_BASELINE.md": "3093e626144b0f26d3d1783fa29046ee981609251badf7b73a2d3d4e4de4626d",
+    "governance/reference/PRD_TRACEABILITY.md": "b0c6665ef6f8d175a9e913411b02aec60efcfa1ca3e86d4a009e3dad570e9eea",
+    "governance/reference/PROJECT.md": "020509f0679d2a9b43ecd9f05920b509115e0bb6444d88c41df768e4c8dc1bc9",
+    "governance/reference/REPORTING_PROTOCOL.md": "416ef1cb48ca6ea1fda0aff2c52dc8469f66fc56646171fc11ac48342ec00bfe",
+    "governance/reference/REQUIREMENTS.md": "928198dec6e9a21524741ad24b3cdfb66f1dbd85529a8c9e6d7f20f1e8ee2d5a",
+    "governance/reference/ROADMAP.md": "1477daf962cd188e44347bc1407656ecfba96dd77b4f9b66ee88bfcc73a66c87",
+    "governance/reference/SECURITY_REPRODUCIBILITY.md": "70b9308a0d5e25a7deae05095c030637e508c9abe37ff680ef1cfb204bca5671",
+    "governance/reference/SOURCE_MANIFEST.md": "d85582421730bc2729814c6221e8dfec2fdb04e5f07d448f7d6f62cfc1fbefe4",
+    "governance/reference/STEP_REPORT_TEMPLATE.md": "520e8626cb80f69e22aecb31f9b5ec417fd0760d668b94d5837eb242553a57c4",
+    "governance/reference/TESTING_VALIDATION.md": "cb7bfaaad1c95d9b52d912d68d4277dac56c33fc44de291266aa636ff9e9287d",
+    "governance/source/Vantara_requirements.docx": "775284832513c27552d8c06c14456ba7adb8526ed5a898a49c0bbd106d7426e9",
+    "governance/tools/verify_reference_lock.py": "b7c01cba56e2c5f71db21cadb1c6f6b40fd412cab524a5de0a1fc1b41836d312"
+  },
+  "lock_version": "1.0",
+  "mutable_state_files": [
+    "STATUS.md",
+    "NEXT_STEPS.md"
+  ],
+  "project": "Vantara Customer Behavior Prediction Platform"
+}

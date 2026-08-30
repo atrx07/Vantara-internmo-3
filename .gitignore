@@ -1,0 +1,73 @@
+# Python environments and caches
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.cache/
+.ipynb_checkpoints/
+
+# Test and coverage output
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+.tox/
+.nox/
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+
+# Immutable raw source workbooks (never commit)
+/online_retail_II.xlsx
+/data/raw/*.xlsx
+/data/raw/*.xls
+
+# Generated data products (local by default)
+/data/interim/*
+!/data/interim/.gitkeep
+/data/processed/*
+!/data/processed/.gitkeep
+
+# Local databases and runtime volumes
+*.db
+*.sqlite
+*.sqlite3
+/postgres_data/
+/pgdata/
+/.postgres/
+/.docker/volumes/
+
+# MLflow runtime stores
+/mlruns/
+/.mlflow/
+/mlflow.db
+
+# Logs, temporary files, and local exports
+*.log
+*.tmp
+*.temp
+*.bak
+*.swp
+~$*
+/tmp/
+/temp/
+/logs/
+/exports/
+
+# Packaging/build output
+build/
+dist/
+*.egg-info/
+
+# IDE and operating-system files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+Desktop.ini
