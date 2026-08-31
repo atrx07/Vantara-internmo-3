@@ -1,0 +1,102 @@
+{
+  "ann": {
+    "artifact": "churn_ann.pt",
+    "best_epoch": 11,
+    "epochs_ran": 17,
+    "metrics": {
+      "accuracy": 0.7237196765498652,
+      "confusion_matrix": [
+        [
+          237,
+          89
+        ],
+        [
+          116,
+          300
+        ]
+      ],
+      "f1": 0.7453416149068323,
+      "precision": 0.7712082262210797,
+      "recall": 0.7211538461538461,
+      "roc_auc": 0.7920673076923077,
+      "threshold": 0.5
+    }
+  },
+  "artifact_reload_checks": [
+    {
+      "artifact": "churn_ann.pt",
+      "reload": "PASS",
+      "sample_output": 0.7787787914276123
+    },
+    {
+      "artifact": "purchase_lstm.pt",
+      "reload": "PASS",
+      "sample_output": 0.3826495110988617
+    },
+    {
+      "artifact": "behavioral_autoencoder.pt",
+      "reload": "PASS",
+      "sample_output": 0.010330758057534695
+    }
+  ],
+  "autoencoder": {
+    "artifact": "behavioral_autoencoder.pt",
+    "feature_count": 10,
+    "interpretation": "manual-review anomaly candidate; not confirmed fraud",
+    "metrics": {
+      "flagged_count": 8,
+      "flagged_rate": 0.01078167115902965,
+      "threshold": 0.1707874834537506,
+      "threshold_percentile": 99.0,
+      "train_reconstruction_loss": 0.029506470521173583,
+      "validation_error_max": 3.7001678943634033,
+      "validation_error_mean": 0.021690890192985535,
+      "validation_error_median": 0.007735267281532288,
+      "validation_error_min": 0.00043665943667292595,
+      "validation_reconstruction_loss": 0.02169088652794252
+    }
+  },
+  "feature_count": 47,
+  "feature_schema_version": "vantara-churn-features-v1",
+  "held_out_test_accessed": false,
+  "lstm": {
+    "artifact": "purchase_lstm.pt",
+    "cv_folds": 5,
+    "cv_mean_f1": 0.511338823087786,
+    "cv_mean_recall": 0.6023945061205074,
+    "cv_mean_roc_auc": 0.7370452255956428,
+    "horizon_days": 30,
+    "metrics": {
+      "accuracy": 0.7277550036170726,
+      "best_epoch": 13,
+      "confusion_matrix": [
+        [
+          2455,
+          737
+        ],
+        [
+          392,
+          563
+        ]
+      ],
+      "f1": 0.4993348115299335,
+      "positive_weight": 3.0330493450164795,
+      "precision": 0.4330769230769231,
+      "recall": 0.5895287958115183,
+      "roc_auc": 0.737624329147476,
+      "threshold": 0.5,
+      "validation_loss": 0.8738777116749527
+    },
+    "sequence_length": 20,
+    "train_customers": 2594,
+    "train_snapshots": 19403,
+    "validation_customers": 558,
+    "validation_snapshots": 4147
+  },
+  "mlflow_run_count": 8,
+  "seed": 42,
+  "source_sha256": "bcbe73b35f5b7babf197fb0cb983a11f5d9ff929078d4aa53d171b1f2df2e980",
+  "split_version": "vantara-customer-split-v1",
+  "step": "STEP 05",
+  "torch_version": "2.7.1+cpu"
+}

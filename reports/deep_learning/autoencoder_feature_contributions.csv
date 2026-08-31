@@ -1,0 +1,11 @@
+feature,mean_flagged_squared_error
+avg_basket_units,2.1737442016601562
+purchase_frequency_trend,1.3201112747192383
+seasonal_purchase_concentration,0.8105722069740295
+frequency_orders,0.8102248907089233
+net_spend,0.7555051445960999
+return_rate,0.5579051375389099
+recency_days,0.4174848198890686
+variance_interpurchase_gap_days,0.25793352723121643
+markdown_affinity_proxy,0.18629637360572815
+avg_order_value,0.17381012439727783

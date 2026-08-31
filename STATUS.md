@@ -2,6 +2,50 @@
 
 > MUTABLE STATE FILE. Codex may edit this file. It must contain observed facts and evidence, never optimistic assumptions.
 
+## STEP 05 — Deep Learning
+
+- Authorization: owner explicitly approved continuation into STEP 05 with `continue` on 2026-08-31.
+- Scope status: `STEP_COMPLETE_WAITING_FOR_APPROVAL`.
+- Scope boundary: no STEP 06 production-model selection, classification-threshold freeze, explainability, serving inventory, or one-time held-out test evaluation.
+- Pre-step HEAD: `1de45be4a56415d144aae2698e1a48feffd9836b`.
+- Canonical command: `.venv\Scripts\python.exe -m src.models.step05_pipeline --config config/config.yaml` — PASS on the full governed M1 artifacts after fold-local LSTM preprocessing was enforced.
+- Runtime: PyTorch `2.7.1+cpu`, deterministic seed `42`, CPU execution with two configured Torch threads; no new dependency was installed or dependency manifest changed.
+
+### PyTorch ANN churn comparison
+
+- The exact frozen `vantara-churn-features-v1` schema and all `47` ordered features are embedded in the artifact metadata.
+- Governed architecture: `47 -> 128 + BatchNorm + ReLU + Dropout(0.30) -> 64 + BatchNorm + ReLU + Dropout(0.20) -> 1`, trained with positive-weighted BCEWithLogitsLoss and AdamW.
+- Early stopping restored epoch `11`; training stopped after `17` epochs.
+- Validation at the non-frozen comparison threshold `0.5`: Accuracy `0.7237196765`, Precision `0.7712082262`, Recall `0.7211538462`, F1 `0.7453416149`, ROC-AUC `0.7920673077`, confusion matrix `[[237, 89], [116, 300]]`.
+- Production selection and threshold choice remain deferred to STEP 06; this is validation evidence only.
+
+### Grouped rolling-snapshot LSTM
+
+- Target: valid positive purchase within 30 days; controlled monthly snapshots use up to the last eight eligible monthly cutoffs and the last 20 valid invoice events.
+- Event inputs: training-taxonomy category embedding plus `log1p(order_amount)` and nonnegative `gap_days`; sequence scaling is learned from training customers only and refitted independently inside every CV fold.
+- Eligible population: `19,403` training snapshots from `2,594` training customers and `4,147` validation snapshots from `558` validation customers. Test-customer transactions are filtered before event/snapshot construction.
+- Five-fold StratifiedGroupKFold customer isolation: PASS; no customer crosses a fold. Mean CV ROC-AUC `0.7370452256`, recall `0.6023945061`, F1 `0.5113388231`.
+- Final validation comparison at threshold `0.5`: Accuracy `0.7277550036`, Precision `0.4330769231`, Recall `0.5895287958`, F1 `0.4993348115`, ROC-AUC `0.7376243291`, confusion matrix `[[2455, 737], [392, 563]]`.
+- Best validation-loss epoch: `13`; `15` epochs ran. The held-out test was not evaluated.
+
+### Behavioral autoencoder
+
+- Ten configured scaled behavioral features use training-only median/mean/scale statistics and the governed symmetric `10 -> 32 -> 8 -> 32 -> 10` architecture.
+- Train reconstruction loss `0.0295064705`; validation reconstruction loss and mean row error `0.0216908865` / `0.0216908902`.
+- Validation 99th-percentile threshold `0.1707874835`; `8 / 742` validation customers flagged (`0.0107816712`). These are manual-review anomaly candidates, not fraud labels or a fraud-accuracy claim.
+- Highest mean flagged reconstruction contributors begin with average basket units, purchase-frequency trend, seasonal concentration, frequency orders, and net spend.
+
+### Evidence, artifacts, notebook, and validation
+
+- Local MLflow: `8` successful runs (1 ANN, 5 grouped LSTM folds, 1 validation LSTM, 1 autoencoder); the runtime store remains ignored and untracked.
+- Three safe `weights_only=True` reload-tested PyTorch artifacts total `164,893` bytes: `churn_ann.pt`, `purchase_lstm.pt`, and `behavioral_autoencoder.pt`.
+- `notebooks/03_model_experiments.ipynb`: PASS — 19 cells, 9/9 code cells executed, zero error outputs; it remains a source-evidence consumer and owns no fitting logic.
+- Generated evidence under `reports/deep_learning/` includes ANN/LSTM/autoencoder loss histories, all required ANN/LSTM metrics, five grouped CV folds, reconstruction distribution/threshold, per-customer validation errors, feature contributions, MLflow summary, reload audit, and STEP 05 summary.
+- `pytest --cov=src --cov-report=term-missing --cov-fail-under=70 -q`: PASS — `52 passed`, source coverage `88.59%`.
+- Ruff and Black: PASS for the STEP 05 implementation and updated notebook builder; notebook execution/structure test: PASS.
+- Governance reference lock: PASS — 30 immutable files verified before final commit preparation.
+- Raw source/canonical-copy protection: unchanged; both workbooks remain ignored and untracked with the governed SHA-256.
+
 ## STEP 04 — Classical ML + CLV + Segmentation + Product Intelligence
 
 - Authorization: owner explicitly approved continuation into STEP 04 with `continue` and later confirmed continuation after context compaction on 2026-08-31.
@@ -268,7 +312,7 @@
 - Bound remote: `origin` -> `https://github.com/atrx07/Vantara-internmo-3.git` (fetch and push URLs).
 - Connectivity: PASS after approved network access.
 - Fetch: PASS.
-- Remote refs/history: `refs/heads/main` exists at the completed STEP 03 governance/state commit before the STEP 04 push.
+- Remote refs/history: `refs/heads/main` exists at the completed STEP 04 commit before the STEP 05 push.
 - Remote default branch: `main`.
 - Local/remote history conflict: NONE.
 - Pushes during STEP 00: NONE.
@@ -277,9 +321,9 @@
 
 - Project status: INCOMPLETE
 - Current milestone: M2 — Intelligence Ready
-- Current step: STEP 04 — Classical ML + CLV + Segmentation + Product Intelligence
+- Current step: STEP 05 — Deep Learning
 - Step state: `STEP_COMPLETE_WAITING_FOR_APPROVAL`
-- Last owner-approved step: STEP 04
+- Last owner-approved step: STEP 05
 - M0 Governance Ready: PASS
 - M1 Data Ready: PASS
 - M2 Intelligence Ready: IN_PROGRESS
@@ -298,6 +342,8 @@
 - Final governance-lock, source-hash, dataset-hash, and working-tree rechecks — PASS — lock still verifies all 30 immutable files; source/dataset hashes and dataset timestamp remain unchanged; only the two permitted state files were edited in the working tree, with required Git metadata initialized separately.
 - STEP 04 full modeling command — PASS — 23 local MLflow runs, 11 reload-validated artifacts, all required validation evidence, and no final-test metrics.
 - STEP 04 notebook execution — PASS — 7/7 code cells executed with zero error outputs.
+- STEP 05 full deep-learning command — PASS — ANN, five grouped LSTM folds, final validation LSTM, autoencoder, 8 MLflow runs, 3 safe reload checks, and no final-test metrics.
+- STEP 05 updated experiment notebook execution — PASS — 9/9 code cells executed with zero error outputs.
 
 ## Commits / pushes
 
@@ -313,6 +359,7 @@
 - STEP 03 implementation push: PASS — advanced `refs/heads/main` from `3430014657b6184ee48e14cdabe669705bc4abce` to `f7fa9782ee57206ef57b0fd4c8b124741ceccdd0`.
 - STEP 03 governance/state-finalization commit: `af1852eb804a4d34b1edc445d0b390bddf52805a` — `governance: authorize green pushes and finalize step 03`; push advanced `refs/heads/main` from `f7fa9782ee57206ef57b0fd4c8b124741ceccdd0` to this hash.
 - STEP 04 implementation/state commit: this record is committed with the green STEP 04 implementation; its exact hash and pushed ref are reported in the chat handoff because a commit cannot contain its own hash.
+- STEP 05 implementation/state commit: this record is committed with the green STEP 05 implementation; its exact hash and pushed ref are reported in the chat handoff because a commit cannot contain its own hash.
 
 ## Blockers / warnings
 
@@ -324,6 +371,8 @@
 - Warning: next-category data contain 31 classes, including 6 training classes with fewer than 5 examples; the locked five-fold stratification therefore has sparse class support, and actual macro metrics are preserved.
 - Warning: Ridge CLV validation R2 is high while mean training-CV R2 is negative, indicating sensitivity to the extreme-value distribution; no final-test or production claim is made.
 - Warning: both segmentation selection rules chose the upper configured candidate boundary (`8`); this is recorded evidence, not an unreported search expansion.
+- Warning: ANN validation ROC-AUC is `0.7920673077`, below the final held-out target `0.80`; STEP 06 selection may still prefer a classical model, and no final metric claim is made.
+- Warning: LSTM validation recall is `0.5895287958`; this is preserved honestly at the fixed comparison threshold and was not manipulated using test data.
 
 ## Readiness and authorization boundary
 
@@ -331,5 +380,6 @@
 - STEP 02 implementation, validation, and all pushes: COMPLETE.
 - STEP 03 implementation, validation, and all pushes: COMPLETE.
 - STEP 04 implementation, validation, evidence, artifacts, and notebook: COMPLETE. This record accompanies the owner-authorized green STEP 04 commit/push; its exact Git evidence is reported in the chat handoff.
-- STEP 05 is NOT AUTHORIZED.
+- STEP 05 implementation, validation, evidence, artifacts, and notebook: COMPLETE. This record accompanies the owner-authorized green STEP 05 commit/push; its exact Git evidence is reported in the chat handoff.
+- STEP 06 is NOT AUTHORIZED.
 - After a green push, next authorized action: WAIT FOR OWNER APPROVAL.

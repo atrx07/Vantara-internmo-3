@@ -1,4 +1,4 @@
-"""Generate the governed STEP 04 model-experiments consumer notebook."""
+"""Generate the governed STEP 04/05 model-experiments consumer notebook."""
 
 from __future__ import annotations
 
@@ -13,9 +13,9 @@ def build_model_experiments_notebook() -> nbformat.NotebookNode:
     cells = [
         new_markdown_cell(
             "# Vantara — 03 Model Experiments\n\n"
-            "This notebook is a thin analysis consumer of STEP 04 evidence produced by "
-            "`src.models.step04_pipeline`. It does not fit models or access the final "
-            "held-out test."
+            "This notebook is a thin analysis consumer of STEP 04 and STEP 05 evidence "
+            "produced by the reusable `src.models` pipelines. It does not fit models or "
+            "access the final held-out test."
         ),
         new_code_cell(
             "import json\n"
@@ -87,10 +87,32 @@ def build_model_experiments_notebook() -> nbformat.NotebookNode:
             "display(pd.DataFrame(reload_checks))"
         ),
         new_markdown_cell(
-            "## STEP 04 boundary\n\n"
-            "All tuning used training-only five-fold CV and all reported comparison metrics are "
-            "validation evidence. Production churn selection, threshold freezing, explainability, "
-            "and the one-time final held-out test remain deferred to STEP 06."
+            "## PyTorch ANN, grouped rolling-snapshot LSTM, and behavioral autoencoder"
+        ),
+        new_code_cell(
+            "DEEP_REPORTS = ROOT / 'reports/deep_learning'\n"
+            "deep_summary = json.loads((DEEP_REPORTS / 'step05_summary.json').read_text())\n"
+            "deep_metrics = pd.DataFrame([\n"
+            "    {'model': 'ANN churn', **deep_summary['ann']['metrics']},\n"
+            "    {'model': '30-day purchase LSTM', **deep_summary['lstm']['metrics']},\n"
+            "])\n"
+            "display(deep_metrics)\n"
+            "display(pd.read_csv(DEEP_REPORTS / 'lstm_grouped_cv.csv'))\n"
+            "display(pd.DataFrame([deep_summary['autoencoder']['metrics']]))"
+        ),
+        new_markdown_cell("## Deep-learning early-stopping and reconstruction evidence"),
+        new_code_cell(
+            "display(pd.read_csv(DEEP_REPORTS / 'ann_loss_history.csv'))\n"
+            "display(pd.read_csv(DEEP_REPORTS / 'lstm_loss_history.csv'))\n"
+            "display(pd.read_csv(DEEP_REPORTS / 'autoencoder_loss_history.csv'))\n"
+            "display(pd.read_csv(DEEP_REPORTS / 'autoencoder_feature_contributions.csv'))"
+        ),
+        new_markdown_cell(
+            "## STEP 04/05 boundary\n\n"
+            "All tuning used training-only folds, LSTM snapshots stayed grouped by customer, and "
+            "all reported comparison metrics are validation evidence. Production churn selection, "
+            "threshold freezing, explainability, and the one-time final held-out test remain "
+            "deferred to STEP 06."
         ),
     ]
     metadata = {
@@ -101,7 +123,7 @@ def build_model_experiments_notebook() -> nbformat.NotebookNode:
 
 
 def main() -> int:
-    """Write the canonical STEP 04 notebook file."""
+    """Write the canonical model-experiments notebook file."""
     destination = Path("notebooks/03_model_experiments.ipynb")
     destination.parent.mkdir(parents=True, exist_ok=True)
     nbformat.write(build_model_experiments_notebook(), destination)

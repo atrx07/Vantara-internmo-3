@@ -183,3 +183,57 @@ modeling:
   recommender:
     neighbors: 25
     top_k: 5
+
+deep_learning:
+  experiment_name: vantara-step05
+  tracking_directory: mlruns
+  artifact_directory: models_artifacts/step05
+  evidence_directory: reports/deep_learning
+  torch_threads: 2
+  ann:
+    batch_size: 128
+    learning_rate: 0.001
+    weight_decay: 0.0001
+    dropout_first: 0.30
+    dropout_second: 0.20
+    max_epochs: 40
+    patience: 6
+    minimum_delta: 0.0001
+  lstm:
+    horizon_days: 30
+    sequence_length: 20
+    snapshot_frequency: MS
+    max_snapshots_per_customer: 8
+    minimum_history_events: 2
+    embedding_size: 8
+    hidden_size: 64
+    dropout: 0.20
+    batch_size: 256
+    learning_rate: 0.001
+    weight_decay: 0.0001
+    cv_folds: 5
+    cv_max_epochs: 4
+    max_epochs: 15
+    patience: 4
+    minimum_delta: 0.0001
+  autoencoder:
+    features:
+      - recency_days
+      - frequency_orders
+      - net_spend
+      - avg_order_value
+      - avg_basket_units
+      - purchase_frequency_trend
+      - variance_interpurchase_gap_days
+      - return_rate
+      - markdown_affinity_proxy
+      - seasonal_purchase_concentration
+    hidden_size: 32
+    latent_size: 8
+    batch_size: 128
+    learning_rate: 0.001
+    weight_decay: 0.0001
+    max_epochs: 40
+    patience: 6
+    minimum_delta: 0.0001
+    threshold_percentile: 99.0

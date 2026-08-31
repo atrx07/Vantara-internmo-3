@@ -1,0 +1,12 @@
+{
+  "flagged_count": 8,
+  "flagged_rate": 0.01078167115902965,
+  "threshold": 0.1707874834537506,
+  "threshold_percentile": 99.0,
+  "train_reconstruction_loss": 0.029506470521173583,
+  "validation_error_max": 3.7001678943634033,
+  "validation_error_mean": 0.021690890192985535,
+  "validation_error_median": 0.007735267281532288,
+  "validation_error_min": 0.00043665943667292595,
+  "validation_reconstruction_loss": 0.02169088652794252
+}

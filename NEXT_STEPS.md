@@ -4,16 +4,16 @@
 
 ## Next step
 
-### STEP 05 — Deep Learning
+### STEP 06 — Model Freeze + XAI + Final Evaluation
 
 Status: `WAITING_FOR_OWNER_APPROVAL`
 
-STEP 04 implementation, validation, artifacts, evidence, notebook execution, and owner-authorized commit/push are complete. No STEP 05 work may begin until the owner explicitly approves STEP 05 in chat.
+STEP 05 implementation, validation, artifacts, evidence, notebook execution, and owner-authorized commit/push are complete. No STEP 06 work may begin until the owner explicitly approves STEP 06 in chat.
 
-If approved later, STEP 05 will execute only its locked roadmap scope: the PyTorch ANN on the exact frozen churn schema, rolling grouped customer snapshots for the 30-day next-purchase LSTM, the PyTorch autoencoder anomaly model, early stopping/loss evidence, grouped LSTM validation, serialized deep-learning artifacts, reload/inference smoke checks, and required metrics. The final held-out test remains untouched.
+If approved later, STEP 06 will execute only its locked roadmap scope: consolidated validation comparison, governed production churn model and threshold freeze, required SHAP/LIME/PDP and plain-language explanations, other-model explanation adapters, and—only after the freeze is recorded—the one-time final held-out evaluation and serving-artifact inventory.
 
 ## Current authorized action
 
 `WAIT FOR OWNER APPROVAL.`
 
-Do not begin STEP 05 automatically.
+Do not begin STEP 06 automatically.

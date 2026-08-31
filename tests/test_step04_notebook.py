@@ -24,10 +24,14 @@ def test_model_experiments_notebook_is_executed_thin_consumer() -> None:
         "next-purchase-category",
         "item-to-item recommender",
         "mlflow",
+        "pytorch ann",
+        "grouped rolling-snapshot lstm",
+        "behavioral autoencoder",
         "held-out test",
     ):
         assert section in markdown
     assert "src.models.common" in code
+    assert "reports/deep_learning" in code
     for forbidden in (
         ".fit(",
         "GridSearchCV(",

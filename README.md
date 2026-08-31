@@ -1,6 +1,6 @@
 # Vantara Customer Behavior Prediction Platform
 
-Vantara is a governed, batch-oriented retail analytics prototype. Milestone M1 provides immutable ingestion, cleaning, point-in-time targets/features, a shared customer split, frozen product artifacts, reproducible EDA, and a versioned churn feature schema. STEP 04 adds validation-stage classical churn and CLV experiments, customer segmentation, next-category prediction, and item recommendations without accessing the final held-out test.
+Vantara is a governed, batch-oriented retail analytics prototype. Milestone M1 provides immutable ingestion, cleaning, point-in-time targets/features, a shared customer split, frozen product artifacts, reproducible EDA, and a versioned churn feature schema. STEP 04 adds validation-stage classical intelligence, and STEP 05 adds PyTorch ANN, grouped rolling-snapshot LSTM, and reconstruction-anomaly experiments without accessing the final held-out test.
 
 ## Development setup
 
@@ -48,6 +48,14 @@ python -m src.models.step04_pipeline --config config/config.yaml
 ```
 
 The command performs five-fold training-only model searches, validation-only evaluation, local MLflow logging, serialization, and artifact-reload checks. Tracked evidence is written under `reports/modeling/`, serving candidates under `models_artifacts/step04/`, and the required executed `notebooks/03_model_experiments.ipynb` remains a consumer of source-generated evidence. The local `mlruns/` store is intentionally ignored. Production churn selection, threshold freezing, explainability, and the one-time final held-out evaluation remain deferred to STEP 06.
+
+Run the STEP 05 PyTorch training pipeline after the STEP 02 processed inputs exist:
+
+```powershell
+python -m src.models.step05_pipeline --config config/config.yaml
+```
+
+The command trains the governed ANN on the exact frozen 47-feature churn schema, creates controlled monthly rolling 20-event sequences for 30-day purchase prediction, executes five customer-grouped LSTM folds with fold-local preprocessing, and trains the behavioral autoencoder. It writes tracked loss/metric/reconstruction evidence under `reports/deep_learning/`, three safe-reload PyTorch artifacts under `models_artifacts/step05/`, and updates the executed model-experiments notebook as an evidence consumer. Test customers are excluded from model fitting, validation, rolling-sequence construction, and reported metrics.
 
 Run the current quality gates:
 

@@ -1,0 +1,17 @@
+[
+  {
+    "artifact": "churn_ann.pt",
+    "reload": "PASS",
+    "sample_output": 0.7787787914276123
+  },
+  {
+    "artifact": "purchase_lstm.pt",
+    "reload": "PASS",
+    "sample_output": 0.3826495110988617
+  },
+  {
+    "artifact": "behavioral_autoencoder.pt",
+    "reload": "PASS",
+    "sample_output": 0.010330758057534695
+  }
+]
