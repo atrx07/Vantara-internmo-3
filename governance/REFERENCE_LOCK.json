@@ -1,6 +1,6 @@
 {
   "files": {
-    "AGENTS.md": "a5a0bd14135d88f2af0bcf0ecba6701ef98c961ef89ed7504f2d624a94e4137d",
+    "AGENTS.md": "be2f3db9faf1c0c6135c8aa3ee4bdd7d488fed57abd691760d9e1a5916c1f088",
     "PACK_MANIFEST.md": "ee2093cf58fa4fa467e88f2520e8ce505f36a6fdf0c0c87369ec86733590d6aa",
     "README_GOVERNANCE.md": "6bfef93b734b34af0de38e8b4e22e7c4307ff2a81fba4c097356b779467f6314",
     "governance/reference/ACCEPTANCE_MATRIX.md": "b6cc0a560b9b1670643c6ee9268de76c622ec10459d5ac35742d278bc7964aa8",
@@ -15,7 +15,7 @@
     "governance/reference/FEATURE_CONTRACT.md": "0c6ef90f6b915cda3e34d467b0d1867c425a5e28283a0247f6babcb449c5c556",
     "governance/reference/FILE_HANDLING.md": "251e7ac2576e86eba350bc2765a8c5ad18aceabd6dd09112f0a3f9a24cca390f",
     "governance/reference/FRONTEND_SPEC.md": "dd08080996f888507b04ba06a84a4d5ad4522526689fc3ce3f572135f97b5978",
-    "governance/reference/GIT_WORKFLOW.md": "843ce1e1d0a498bfa0bc41cbe89ab57dbea02f3c41de04e66e4bf0147b6dd2b1",
+    "governance/reference/GIT_WORKFLOW.md": "582735c63c2c0ca2e00e4df84bad3dfd4b353322c4c76a2c08a86eb6c2475d91",
     "governance/reference/GOVERNANCE_INDEX.md": "895d25efeeda3f91fc7eca8c244abc4fb3a45bbeb95b874c490b66a0c4a64ba5",
     "governance/reference/MODELING_SPEC.md": "c78e538266f4fc47550d635ebbec90dfd87391379062eeeb15f04df0b7bdb59c",
     "governance/reference/PRD_BASELINE.md": "3093e626144b0f26d3d1783fa29046ee981609251badf7b73a2d3d4e4de4626d",

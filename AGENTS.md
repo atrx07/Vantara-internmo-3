@@ -144,6 +144,10 @@ At the end of **every** step:
 
 Approval for one step does not imply approval for later steps. Never auto-chain steps.
 
+### Commit and push authorization
+
+Explicit owner approval of a roadmap step authorizes the agent to create and normally push that step's green atomic commit(s) without requesting a separate commit or push approval in chat. Before pushing, the agent must still complete the required validation, fetch and compare the remote, confirm raw-data and secret protections, and satisfy every Git safety rule. This standing authorization does not authorize a later roadmap step, a force-push, a history rewrite, or bypassing a platform-required security approval.
+
 ## 5. Git safety contract
 
 The fast-path branch is `main`; no feature-branch/PR workflow is required for this solo internship project.

@@ -59,6 +59,7 @@ Because `STATUS.md` needs real commit hashes, when necessary use a two-stage fac
 
 ## 6. Before push
 
+- explicit owner approval of the current roadmap step is sufficient commit and push authorization; do not request a second chat confirmation when the required validation is green;
 - `git fetch origin`;
 - verify local branch relationship to `origin/main`;
 - if remote advanced unexpectedly, stop/report rather than force-push;

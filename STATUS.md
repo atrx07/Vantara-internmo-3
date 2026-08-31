@@ -5,7 +5,7 @@
 ## STEP 03 — EDA + Data Freeze
 
 - Authorization: owner explicitly approved continuation into STEP 03 on 2026-08-31.
-- Scope status: IMPLEMENTATION AND VALIDATION COMPLETE; COMMIT/PUSH PENDING.
+- Scope status: `STEP_COMPLETE_WAITING_FOR_APPROVAL`.
 - Scope boundary: no STEP 04 model training, MLflow experiments, segmentation, next-category model, or recommender was implemented.
 - Pre-step HEAD: `3430014657b6184ee48e14cdabe669705bc4abce`.
 
@@ -45,7 +45,8 @@
 - Ruff: PASS, including notebook code cells.
 - Black check: PASS for Python source (`34` files unchanged); Black reported notebooks skipped because its optional Jupyter extra is not installed, while Ruff and executed-notebook validation passed.
 - `pip check`: PASS; compileall: PASS.
-- Governance reference lock: PASS — 30 immutable files verified.
+- Governance reference lock: PASS — 30 immutable files verified before and after the owner-authorized commit/push governance amendment.
+- Owner governance amendment: PASS — on 2026-08-31 the owner explicitly established that approval of a roadmap step also authorizes its green atomic commit(s) and normal push without a second chat confirmation. `AGENTS.md` and `governance/reference/GIT_WORKFLOW.md` now record that standing rule, and `governance/REFERENCE_LOCK.json` was refreshed for those exact authorized changes.
 - M1 acceptance: PASS — workbook, both-sheet ingestion, cleaning, required features, churn/CLV targets, taxonomy/affinities, shared split, leakage tests, required notebooks, EDA, correlation/VIF evidence, and single-command pipeline all have executed evidence.
 - Environment warnings: Joblib used logical-core fallback because WMIC physical-core discovery is unavailable; Matplotlib dependency deprecation warnings occurred during tests; Jupyter required temporary workspace/local-temp runtime directories because user-profile writes are sandbox-blocked. None caused a failed final gate.
 
@@ -224,7 +225,7 @@
 - Project status: INCOMPLETE
 - Current milestone: M1 — Data Ready
 - Current step: STEP 03 — EDA + Data Freeze
-- Step state: `VALIDATED_PENDING_COMMIT_AND_PUSH`
+- Step state: `STEP_COMPLETE_WAITING_FOR_APPROVAL`
 - Last owner-approved step: STEP 03
 - M0 Governance Ready: PASS
 - M1 Data Ready: PASS
@@ -253,6 +254,9 @@
 - STEP 02 implementation commit: `bf28920275119181040ebb2920ba0b68f6d52b48` — `step-02: implement cleaning snapshots and feature pipeline`.
 - STEP 02 implementation push: PASS — advanced `refs/heads/main` from `01081363d01bfb45e9d4d60404fb2c43c9e313d4` to `bf28920275119181040ebb2920ba0b68f6d52b48`.
 - STEP 02 state-finalization commit: this status record is committed separately after the implementation push; its exact hash and pushed ref are recorded in the chat handoff because a commit cannot contain its own hash.
+- STEP 03 implementation commit: `f7fa9782ee57206ef57b0fd4c8b124741ceccdd0` — `step-03: complete EDA and freeze data foundation`.
+- STEP 03 implementation push: PASS — advanced `refs/heads/main` from `3430014657b6184ee48e14cdabe669705bc4abce` to `f7fa9782ee57206ef57b0fd4c8b124741ceccdd0`.
+- STEP 03 governance/state-finalization commit: this status record is committed separately after the implementation push; its exact hash and pushed ref are recorded in the chat handoff because a commit cannot contain its own hash.
 
 ## Blockers / warnings
 
@@ -266,6 +270,6 @@
 
 - STEP 01 implementation, validation, and implementation push: COMPLETE.
 - STEP 02 implementation, validation, and all pushes: COMPLETE.
-- STEP 03 implementation and validation: COMPLETE; commit and push are the remaining authorized actions.
+- STEP 03 implementation, validation, and implementation push: COMPLETE. The owner-authorized governance/state-finalization commit is the remaining STEP 03 bookkeeping action.
 - STEP 04 is NOT AUTHORIZED.
 - After a green push, next authorized action: WAIT FOR OWNER APPROVAL.
