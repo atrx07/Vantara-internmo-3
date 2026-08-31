@@ -1,0 +1,7 @@
+{
+  "choices_frozen": true,
+  "evaluation_attempt": 1,
+  "freeze_sha256": "be64ed61ab5d4dc5f0a849a4101a4d5aa986ecf8d3bbbc24cce5e91e5562ba84",
+  "started_at_utc": "2026-08-31T16:19:50.771016+00:00",
+  "status_sentinel": "FINAL_TEST_AUTHORIZED_AND_CHOICES_FROZEN"
+}

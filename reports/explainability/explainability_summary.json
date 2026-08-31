@@ -1,0 +1,54 @@
+{
+  "generated_files": [
+    "autoencoder_local_contributions.csv",
+    "churn_global_shap_importance.csv",
+    "churn_lime_borderline.csv",
+    "churn_lime_borderline.html",
+    "churn_local_shap_values.csv",
+    "churn_partial_dependence.png",
+    "churn_plain_language_explanations.json",
+    "churn_shap_force_borderline.html",
+    "churn_shap_force_high.html",
+    "churn_shap_force_low.html",
+    "churn_shap_local_borderline.png",
+    "churn_shap_local_high.png",
+    "churn_shap_local_low.png",
+    "churn_shap_summary.png",
+    "clv_shap_importance.csv",
+    "explainability_summary.json",
+    "lstm_event_perturbation.csv",
+    "next_category_shap_importance.csv",
+    "recommender_reason_examples.json",
+    "segment_profile_explanations.csv",
+    "shap_lime_comparison.md"
+  ],
+  "held_out_test_accessed": false,
+  "production_churn_model": "random_forest",
+  "representatives": {
+    "borderline": {
+      "customer_id": "12468",
+      "probability": 0.19547504896995008
+    },
+    "high": {
+      "customer_id": "17401",
+      "probability": 0.9201279946895585
+    },
+    "low": {
+      "customer_id": "12681",
+      "probability": 0.03567768651001671
+    }
+  },
+  "step": "STEP 06",
+  "top_global_features": [
+    "recency_days",
+    "frequency_orders",
+    "net_spend",
+    "variance_interpurchase_gap_days",
+    "unique_product_count",
+    "seasonal_purchase_concentration",
+    "mean_interpurchase_gap_days",
+    "customer_tenure_days",
+    "category_affinity_29",
+    "category_affinity_21"
+  ]
+}

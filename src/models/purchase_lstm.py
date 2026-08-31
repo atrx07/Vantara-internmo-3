@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import time
-from collections.abc import Mapping
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -102,8 +102,9 @@ def build_rolling_sequences(
     *,
     observation_end: pd.Timestamp,
     config: Mapping[str, Any],
+    allowed_partitions: Sequence[str] = ("train", "validation"),
 ) -> RollingSequences:
-    """Build monthly rolling sequences for train/validation customers only."""
+    """Build monthly rolling sequences for the explicitly allowed customer partitions."""
     required = {
         "customer_id",
         "invoice",
@@ -120,8 +121,11 @@ def build_rolling_sequences(
     split_required = {"customer_id", "partition"}
     if not split_required.issubset(split.columns):
         raise DataValidationError("LSTM split table is missing customer_id/partition")
+    allowed = tuple(str(value) for value in allowed_partitions)
+    if not allowed or any(value not in {"train", "validation", "test"} for value in allowed):
+        raise DataValidationError(f"Invalid LSTM allowed partitions: {allowed}")
     eligible_split = split.loc[
-        split["partition"].astype("string").isin(["train", "validation"]),
+        split["partition"].astype("string").isin(allowed),
         ["customer_id", "partition"],
     ].copy()
     partition_by_customer = dict(
@@ -150,7 +154,9 @@ def build_rolling_sequences(
         ],
     ].copy()
     if lines.empty:
-        raise DataValidationError("No eligible train/validation purchase events exist for LSTM")
+        raise DataValidationError(
+            f"No eligible purchase events exist for LSTM partitions {allowed}"
+        )
     category_map = taxonomy.loc[:, ["stock_code", "category_id"]].copy()
     lines = lines.merge(category_map, on="stock_code", how="left", validate="many_to_one")
     lines["category_index"] = lines["category_id"].fillna(-1).astype("int64") + 1

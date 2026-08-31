@@ -4,16 +4,16 @@
 
 ## Next step
 
-### STEP 06 — Model Freeze + XAI + Final Evaluation
+### STEP 07 — PostgreSQL + FastAPI
 
 Status: `WAITING_FOR_OWNER_APPROVAL`
 
-STEP 05 implementation, validation, artifacts, evidence, notebook execution, and owner-authorized commit/push are complete. No STEP 06 work may begin until the owner explicitly approves STEP 06 in chat.
+STEP 06 validation comparison, production freeze, explainability, serving inventory, single held-out evaluation, validation, evidence, and owner-authorized commit/push are complete. No STEP 07 work may begin until the owner explicitly approves STEP 07 in chat.
 
-If approved later, STEP 06 will execute only its locked roadmap scope: consolidated validation comparison, governed production churn model and threshold freeze, required SHAP/LIME/PDP and plain-language explanations, other-model explanation adapters, and—only after the freeze is recorded—the one-time final held-out evaluation and serving-artifact inventory.
+If approved later, STEP 07 will execute only its locked roadmap scope: PostgreSQL models/schema, Alembic migrations, deterministic serving-data initialization, FastAPI application and lifespan artifact loading, governed health/metadata/prediction/batch/supporting endpoints, Pydantic validation, prediction/segment persistence, and required API/database validation.
 
 ## Current authorized action
 
 `WAIT FOR OWNER APPROVAL.`
 
-Do not begin STEP 06 automatically.
+Do not begin STEP 07 automatically.

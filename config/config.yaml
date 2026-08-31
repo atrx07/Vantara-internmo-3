@@ -237,3 +237,19 @@ deep_learning:
     patience: 6
     minimum_delta: 0.0001
     threshold_percentile: 99.0
+
+model_freeze:
+  evidence_directory: reports/model_freeze
+  explainability_directory: reports/explainability
+  final_evaluation_directory: reports/final_evaluation
+  serving_artifact_root: models_artifacts
+  minimum_recall: 0.70
+  roc_auc_tolerance: 0.01
+  threshold_beta: 2.0
+  xai:
+    validation_sample_size: 742
+    background_sample_size: 200
+    local_max_features: 12
+    lime_features: 10
+    pdp_features: 3
+    other_model_sample_size: 200

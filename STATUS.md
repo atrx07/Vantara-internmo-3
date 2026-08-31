@@ -2,6 +2,32 @@
 
 > MUTABLE STATE FILE. Codex may edit this file. It must contain observed facts and evidence, never optimistic assumptions.
 
+## STEP 06 — Model Freeze + XAI + Final Evaluation
+
+- Authorization: owner explicitly approved continuation into STEP 06 with `continue`.
+- Scope status: `STEP_COMPLETE_WAITING_FOR_APPROVAL`.
+- Pre-step HEAD: `670b9f47370fc1be688ff82a6a9749da48421a8d`.
+- Final-test authorization sentinel: `FINAL_TEST_AUTHORIZED_AND_CHOICES_FROZEN`.
+- Frozen production churn choice: Random Forest, selected from all seven validation-only candidates under the locked recall/AUC rule; frozen F2-oriented threshold `0.19547504896995008`.
+- Frozen production CLV choice: Ridge, selected from validation evidence; the negative mean training-CV R2 warning remains unresolved and disclosed.
+- Frozen feature schema: `vantara-churn-features-v1`, exactly 47 ordered model inputs; split version `vantara-customer-split-v1`; source SHA-256 `bcbe73b35f5b7babf197fb0cb983a11f5d9ff929078d4aa53d171b1f2df2e980`.
+- Serving inventory: eight versioned model/product artifacts were copied into canonical serving paths and hashed in `reports/model_freeze/model_freeze.json`.
+- Explainability: validation-only global/local SHAP, same-customer LIME, PDP, plain-language churn narratives, and adapters for CLV, LSTM, next-category, autoencoder, recommender, and segmentation generated successfully; `held_out_test_accessed: false`.
+- Pre-final validation: `59 passed`; Ruff PASS; Black PASS.
+- Frozen record before final test: `choices_frozen: true`, `final_test_status: NOT_RUN`, `held_out_test_accessed: false`.
+- Owner approval, production choices, threshold, schema, and serving inventory were factually recorded before held-out access.
+- Final-test execution: PASS — the governed evaluator ran exactly once on attempt `1`, after freeze SHA-256 `be64ed61ab5d4dc5f0a849a4101a4d5aa986ecf8d3bbbc24cce5e91e5562ba84` was locked. The permanent execution lock and final metrics evidence prohibit a rerun.
+- Churn held-out result: ROC-AUC `0.8129394472` (target `>=0.80`, PASS), recall `0.9800884956` (target `>=0.70`, PASS), precision `0.6753048780`, F1 `0.7996389892`, accuracy `0.7016129032`, confusion matrix `[[79, 213], [9, 443]]`, `744` customers.
+- CLV held-out result: R2 `0.0307371581` (target `>=0.60`, MISS), MAE `853.8916506317`, RMSE `5873.4661343103`, `744` customers. The genuine metric miss is preserved without tuning or rerunning the held-out set; the earlier negative CV R2 correctly warned of poor distributional generalization despite high validation R2.
+- LSTM held-out result: ROC-AUC `0.7657110672`, recall `0.6489795918`, precision `0.4562410330`, F1 `0.5358045493`, accuracy `0.7303645706`, `4,087` grouped snapshots from `549` test customers.
+- Next-category held-out result: macro-F1 `0.0919526301`, Top-1 `0.3698630137`, Top-3 `0.5890410959`, `292` eligible test customers across `31` classes.
+- Autoencoder held-out result: `11 / 744` manual-review anomaly candidates (`0.0147849462`) at the frozen threshold; no fraud-accuracy claim is made.
+- Final evidence: execution lock, complete metrics JSON, and five row-level prediction/score CSVs under `reports/final_evaluation/`; `held_out_test_evaluations: 1`.
+- Final validation: `pytest --cov=src --cov-report=term-missing --cov-fail-under=70 -q` PASS — `61 passed`, total source coverage `75.57%`; Ruff PASS; Black PASS (`60` Python files unchanged, notebooks skipped because Black's optional Jupyter extra is absent); `pip check` PASS; compileall PASS.
+- Freeze immutability: PASS — both the final evaluator and model-freeze command fail closed after the persisted execution lock; unit tests cover the pre-test sentinel and post-test rerun guards.
+- Governance/raw-data audit: reference lock PASS for all `30` immutable files; both raw workbooks retain the governed SHA-256 and remain ignored/untracked.
+- Scope boundary: no STEP 07 database, migration, API, or persistence work was started.
+
 ## STEP 05 — Deep Learning
 
 - Authorization: owner explicitly approved continuation into STEP 05 with `continue` on 2026-08-31.
@@ -321,12 +347,12 @@
 
 - Project status: INCOMPLETE
 - Current milestone: M2 — Intelligence Ready
-- Current step: STEP 05 — Deep Learning
+- Current step: STEP 06 — Model Freeze + XAI + Final Evaluation
 - Step state: `STEP_COMPLETE_WAITING_FOR_APPROVAL`
-- Last owner-approved step: STEP 05
+- Last owner-approved step: STEP 06
 - M0 Governance Ready: PASS
 - M1 Data Ready: PASS
-- M2 Intelligence Ready: IN_PROGRESS
+- M2 Intelligence Ready: PASS
 - M3 Product Ready: NOT_STARTED
 
 ## Validation evidence
@@ -344,6 +370,9 @@
 - STEP 04 notebook execution — PASS — 7/7 code cells executed with zero error outputs.
 - STEP 05 full deep-learning command — PASS — ANN, five grouped LSTM folds, final validation LSTM, autoencoder, 8 MLflow runs, 3 safe reload checks, and no final-test metrics.
 - STEP 05 updated experiment notebook execution — PASS — 9/9 code cells executed with zero error outputs.
+- STEP 06 validation comparison/model/threshold freeze — PASS — seven churn candidates consolidated from logs; validation-only Random Forest and F2 threshold selected under the locked rule.
+- STEP 06 explainability — PASS — required SHAP/LIME/PDP/plain-language outputs and other-model adapters generated and inspected before final-test access.
+- STEP 06 one-time final evaluation — PASS — attempt 1 completed after freeze; five model families scored and immutable-style evidence persisted; no rerun occurred.
 
 ## Commits / pushes
 
@@ -360,6 +389,7 @@
 - STEP 03 governance/state-finalization commit: `af1852eb804a4d34b1edc445d0b390bddf52805a` — `governance: authorize green pushes and finalize step 03`; push advanced `refs/heads/main` from `f7fa9782ee57206ef57b0fd4c8b124741ceccdd0` to this hash.
 - STEP 04 implementation/state commit: this record is committed with the green STEP 04 implementation; its exact hash and pushed ref are reported in the chat handoff because a commit cannot contain its own hash.
 - STEP 05 implementation/state commit: this record is committed with the green STEP 05 implementation; its exact hash and pushed ref are reported in the chat handoff because a commit cannot contain its own hash.
+- STEP 06 implementation/state commit: this record will be committed with the green STEP 06 implementation; its exact hash and pushed ref are reported in the chat handoff because a commit cannot contain its own hash.
 
 ## Blockers / warnings
 
@@ -373,6 +403,8 @@
 - Warning: both segmentation selection rules chose the upper configured candidate boundary (`8`); this is recorded evidence, not an unreported search expansion.
 - Warning: ANN validation ROC-AUC is `0.7920673077`, below the final held-out target `0.80`; STEP 06 selection may still prefer a classical model, and no final metric claim is made.
 - Warning: LSTM validation recall is `0.5895287958`; this is preserved honestly at the fixed comparison threshold and was not manipulated using test data.
+- Warning: CLV held-out R2 is `0.0307371581`, below the PRD target `0.60`; the result is final, is not eligible for test-set-driven retuning, and must be discussed in the final report as permitted by the acceptance contract.
+- Warning: the held-out final evaluation is permanently consumed at one attempt; neither the evaluator nor the model freeze may be rerun to change final evidence.
 
 ## Readiness and authorization boundary
 
@@ -381,5 +413,6 @@
 - STEP 03 implementation, validation, and all pushes: COMPLETE.
 - STEP 04 implementation, validation, evidence, artifacts, and notebook: COMPLETE. This record accompanies the owner-authorized green STEP 04 commit/push; its exact Git evidence is reported in the chat handoff.
 - STEP 05 implementation, validation, evidence, artifacts, and notebook: COMPLETE. This record accompanies the owner-authorized green STEP 05 commit/push; its exact Git evidence is reported in the chat handoff.
-- STEP 06 is NOT AUTHORIZED.
+- STEP 06 implementation, validation-only selection, model freeze, explainability, single held-out evaluation, and evidence: COMPLETE. This record accompanies the owner-authorized green STEP 06 commit/push; its exact Git evidence is reported in the chat handoff.
+- STEP 07 is NOT AUTHORIZED.
 - After a green push, next authorized action: WAIT FOR OWNER APPROVAL.

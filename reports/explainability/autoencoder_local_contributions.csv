@@ -1,0 +1,11 @@
+customer_id,feature,scaled_value,reconstructed_value,squared_error_contribution
+14646,avg_basket_units,1.3163123,4.934174,13.088923
+14646,purchase_frequency_trend,2.647569,0.22981164,5.84555
+14646,frequency_orders,9.107306,11.274732,4.697736
+14646,net_spend,35.919876,33.75296,4.6955247
+14646,seasonal_purchase_concentration,-1.3435224,0.6085312,3.810513
+14646,return_rate,-0.12197561,-1.7674569,2.7076085
+14646,variance_interpurchase_gap_days,-0.4158287,-1.3910282,0.951014
+14646,avg_order_value,4.8723626,3.984464,0.78836405
+14646,markdown_affinity_proxy,1.544996,1.0142019,0.28174242
+14646,recency_days,-1.2225631,-0.85554785,0.13470024

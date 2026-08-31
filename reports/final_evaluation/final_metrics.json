@@ -1,0 +1,83 @@
+{
+  "autoencoder": {
+    "error_max": 8.779688835144043,
+    "error_mean": 0.041516583412885666,
+    "error_median": 0.007856439799070358,
+    "error_min": 0.00037231313763186336,
+    "flagged_count": 11,
+    "flagged_rate": 0.01478494623655914,
+    "interpretation": "manual-review anomaly candidate; not confirmed fraud",
+    "rows": 744,
+    "threshold": 0.1707874834537506
+  },
+  "choices_frozen_before_test": true,
+  "churn": {
+    "accuracy": 0.7016129032258065,
+    "confusion_matrix": [
+      [
+        79,
+        213
+      ],
+      [
+        9,
+        443
+      ]
+    ],
+    "f1": 0.7996389891696751,
+    "precision": 0.6753048780487805,
+    "recall": 0.9800884955752213,
+    "roc_auc": 0.8129394472057219,
+    "rows": 744,
+    "threshold": 0.19547504896995008
+  },
+  "clv": {
+    "mae": 853.8916506316974,
+    "r2": 0.030737158136906362,
+    "rmse": 5873.466134310345,
+    "rows": 744
+  },
+  "completed_at_utc": "2026-08-31T16:19:52.657273+00:00",
+  "evaluation_attempt": 1,
+  "feature_schema_version": "vantara-churn-features-v1",
+  "freeze_sha256": "be64ed61ab5d4dc5f0a849a4101a4d5aa986ecf8d3bbbc24cce5e91e5562ba84",
+  "freeze_version": "vantara-model-freeze-v1",
+  "held_out_test_accessed": true,
+  "held_out_test_evaluations": 1,
+  "next_category": {
+    "classes": 31,
+    "macro_f1": 0.091952630074802,
+    "rows": 292,
+    "top_1_accuracy": 0.3698630136986301,
+    "top_3_accuracy": 0.589041095890411
+  },
+  "next_purchase_lstm": {
+    "accuracy": 0.7303645705896746,
+    "confusion_matrix": [
+      [
+        2349,
+        758
+      ],
+      [
+        344,
+        636
+      ]
+    ],
+    "customers": 549,
+    "f1": 0.535804549283909,
+    "precision": 0.4562410329985653,
+    "recall": 0.6489795918367347,
+    "roc_auc": 0.7657110671755023,
+    "rows": 4087,
+    "threshold": 0.5
+  },
+  "production_churn_model": "random_forest",
+  "production_clv_model": "ridge",
+  "source_sha256": "bcbe73b35f5b7babf197fb0cb983a11f5d9ff929078d4aa53d171b1f2df2e980",
+  "split_version": "vantara-customer-split-v1",
+  "step": "STEP 06",
+  "target_assessment": {
+    "churn_recall_ge_0_70": true,
+    "churn_roc_auc_ge_0_80": true,
+    "clv_r2_ge_0_60": false
+  }
+}

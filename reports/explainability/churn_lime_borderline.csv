@@ -1,0 +1,11 @@
+condition,lime_weight
+net_spend > 2137.28,-0.05810543661001477
+55.51 < recency_days <= 178.15,-0.04971670179126289
+seasonal_purchase_concentration <= 0.33,-0.03695341152280958
+unique_product_count > 97.00,-0.03665286610709999
+3.00 < frequency_orders <= 7.00,-0.01906686918889728
+variance_interpurchase_gap_days > 2067.67,-0.015788211074035875
+495.97 < customer_tenure_days <= 594.02,0.013621276143843076
+category_affinity_09 <= 0.00,-0.011737802022889801
+category_affinity_07 > 0.02,-0.011712816988540124
+category_affinity_02 > 0.02,-0.011490486280877305

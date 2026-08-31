@@ -1,0 +1,87 @@
+{
+  "choices_frozen": true,
+  "feature_count": 47,
+  "feature_schema_version": "vantara-churn-features-v1",
+  "final_test_status": "NOT_RUN",
+  "freeze_version": "vantara-model-freeze-v1",
+  "held_out_test_accessed": false,
+  "owner_step06_approval_received": true,
+  "production_autoencoder": {
+    "artifact": "models_artifacts/autoencoder/behavioral_autoencoder.pt",
+    "model": "behavioral_autoencoder",
+    "threshold": 0.1707874834537506,
+    "threshold_method": "validation_reconstruction_error_percentile_99"
+  },
+  "production_churn": {
+    "artifact": "models_artifacts/churn/production_churn.joblib",
+    "model": "random_forest",
+    "threshold": 0.19547504896995008,
+    "threshold_beta": 2.0,
+    "validation_recall_at_0_5": 0.7788461538461539,
+    "validation_roc_auc": 0.8015868334119868,
+    "validation_threshold_f_beta": 0.8883139284174214,
+    "validation_threshold_precision": 0.6290076335877862,
+    "validation_threshold_recall": 0.9903846153846154
+  },
+  "production_clv": {
+    "artifact": "models_artifacts/clv/production_clv.joblib",
+    "cv_r2_mean": -2.1797938354920285,
+    "model": "ridge",
+    "validation_r2": 0.968462927659284,
+    "validation_rmse": 1083.6206152548364
+  },
+  "production_next_category": {
+    "artifact": "models_artifacts/next_category/next_category_lightgbm.joblib",
+    "model": "lightgbm_multiclass"
+  },
+  "production_next_purchase": {
+    "artifact": "models_artifacts/next_purchase/purchase_lstm.pt",
+    "model": "purchase_lstm",
+    "threshold": 0.5
+  },
+  "serving_artifacts": [
+    {
+      "path": "models_artifacts/churn/production_churn.joblib",
+      "sha256": "0ea2ffc432a07787ae6ba022623a915d24aaa821b554b5772a95b98de2b5cdf7",
+      "size_bytes": 3036118
+    },
+    {
+      "path": "models_artifacts/clv/production_clv.joblib",
+      "sha256": "b306ef3e2435baafbec93b1d113faeff1e6cd8a3d5eeea9f1f14ea00b97dd6eb",
+      "size_bytes": 8399
+    },
+    {
+      "path": "models_artifacts/next_purchase/purchase_lstm.pt",
+      "sha256": "3ecbd34e7296fe2035c16c566183327f835d5498f2a3d57ce745069721e73af7",
+      "size_bytes": 83999
+    },
+    {
+      "path": "models_artifacts/next_category/next_category_lightgbm.joblib",
+      "sha256": "7bd0f884925d8f08e5de853a50b9343e6d6299e7a08576362b7587f5a3f56563",
+      "size_bytes": 10509998
+    },
+    {
+      "path": "models_artifacts/autoencoder/behavioral_autoencoder.pt",
+      "sha256": "af27723e20a7223c7d8c40bafd838a9e584fc8331f351765971255da62a3131b",
+      "size_bytes": 10591
+    },
+    {
+      "path": "models_artifacts/segmentation/segmentation_bundle.joblib",
+      "sha256": "7113926c89e1e048a1e72f9eb0f888ac1797ce61f6050f53b29d0ff78111023d",
+      "size_bytes": 22211
+    },
+    {
+      "path": "models_artifacts/recommendation/item_to_item_recommender.joblib",
+      "sha256": "cdcefb94417ae100c1783f351ded3a0ac8230e3eafc9ea58e38a39a64992e82c",
+      "size_bytes": 982506
+    },
+    {
+      "path": "models_artifacts/product_taxonomy/product_taxonomy.parquet",
+      "sha256": "3a29d87f4d779b4637dc025becb0f5b3ad05206325f99d21502900a1c47e27bd",
+      "size_bytes": 124413
+    }
+  ],
+  "source_sha256": "bcbe73b35f5b7babf197fb0cb983a11f5d9ff929078d4aa53d171b1f2df2e980",
+  "split_version": "vantara-customer-split-v1",
+  "step": "STEP 06"
+}

@@ -1,0 +1,23 @@
+[
+  {
+    "customer_id": "12681",
+    "probability": 0.03567768651001671,
+    "risk_profile": "low",
+    "text": "Estimated churn risk is 3.6%, below the frozen 19.5% decision threshold; monitor normally. Main upward drivers: category_affinity_04, customer_tenure_days. Main risk-reducing drivers: recency_days, frequency_orders, net_spend.",
+    "threshold": 0.19547504896995008
+  },
+  {
+    "customer_id": "12468",
+    "probability": 0.19547504896995008,
+    "risk_profile": "borderline",
+    "text": "Estimated churn risk is 19.5%, above the frozen 19.5% decision threshold; prioritize for retention review. Main upward drivers: customer_tenure_days, purchase_frequency_trend, category_affinity_20. Main risk-reducing drivers: net_spend, recency_days, seasonal_purchase_concentration.",
+    "threshold": 0.19547504896995008
+  },
+  {
+    "customer_id": "17401",
+    "probability": 0.9201279946895585,
+    "risk_profile": "high",
+    "text": "Estimated churn risk is 92.0%, above the frozen 19.5% decision threshold; prioritize for retention review. Main upward drivers: recency_days, net_spend, frequency_orders. Main risk-reducing drivers: category_affinity_07, category_affinity_03, category_affinity_27.",
+    "threshold": 0.19547504896995008
+  }
+]

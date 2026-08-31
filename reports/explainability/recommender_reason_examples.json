@@ -1,0 +1,42 @@
+[
+  {
+    "cosine_similarity": 0.25526657700538635,
+    "reason": "Recommended because it is behaviorally similar to 10002.",
+    "recommended_description": "FLOWER FAIRY OIL BURNER SET ROSE",
+    "recommended_stock_code": "72755C",
+    "source_description": "INFLATABLE POLITICAL GLOBE",
+    "source_stock_code": "10002"
+  },
+  {
+    "cosine_similarity": 0.24653035402297974,
+    "reason": "Recommended because it is behaviorally similar to 10002.",
+    "recommended_description": "LILLIES CANVAS PICTURE",
+    "recommended_stock_code": "84726",
+    "source_description": "INFLATABLE POLITICAL GLOBE",
+    "source_stock_code": "10002"
+  },
+  {
+    "cosine_similarity": 0.23458555340766907,
+    "reason": "Recommended because it is behaviorally similar to 10002.",
+    "recommended_description": "MAXWELL 2 TONE PINK 60 PAGE PHOTO A",
+    "recommended_stock_code": "16244A",
+    "source_description": "INFLATABLE POLITICAL GLOBE",
+    "source_stock_code": "10002"
+  },
+  {
+    "cosine_similarity": 0.229867085814476,
+    "reason": "Recommended because it is behaviorally similar to 10002.",
+    "recommended_description": "50CM METAL STRING WITH 7 CLIPS",
+    "recommended_stock_code": "47481",
+    "source_description": "INFLATABLE POLITICAL GLOBE",
+    "source_stock_code": "10002"
+  },
+  {
+    "cosine_similarity": 0.22937791049480438,
+    "reason": "Recommended because it is behaviorally similar to 10002.",
+    "recommended_description": "LUNCH BAG RED SPOTTY",
+    "recommended_stock_code": "20725",
+    "source_description": "INFLATABLE POLITICAL GLOBE",
+    "source_stock_code": "10002"
+  }
+]
