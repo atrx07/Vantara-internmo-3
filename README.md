@@ -1,8 +1,8 @@
 # Vantara Customer Behavior Prediction Platform
 
-Vantara is a governed, batch-oriented retail analytics prototype. The repository is built through owner-approved roadmap steps; the implemented data foundation currently covers immutable ingestion plus STEP 02 cleaning, point-in-time snapshots, targets, features, taxonomy, partitioning, and preprocessing contracts.
+Vantara is a governed, batch-oriented retail analytics prototype. The repository is built through owner-approved roadmap steps; Milestone M1 now provides immutable ingestion, cleaning, point-in-time targets/features, a shared customer split, frozen product artifacts, reproducible EDA, and a versioned churn feature schema.
 
-## STEP 01 development setup
+## Development setup
 
 Requirements:
 
@@ -32,6 +32,14 @@ python -m src.data.step02_pipeline --config config/config.yaml
 ```
 
 The command writes ignored, reproducible local outputs under `data/interim/` and `data/processed/`. It removes exact duplicate lines only; all other source rows remain auditable through explicit quality flags. Predictive features use transactions strictly before their configured snapshot cutoff, and population-learned artifacts use training customers only.
+
+Run the complete single-command M1 pipeline:
+
+```powershell
+python -m src.pipeline --config config/config.yaml
+```
+
+This regenerates the data foundation, tracked EDA/data-freeze evidence under `reports/`, and the canonical `models_artifacts/churn_feature_schema.json`. The required `notebooks/01_eda.ipynb` and `notebooks/02_feature_engineering.ipynb` are executed analysis consumers; they do not own production transformations.
 
 Run the current quality gates:
 

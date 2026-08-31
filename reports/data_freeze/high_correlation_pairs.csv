@@ -1,0 +1,4 @@
+feature_a,feature_b,correlation,absolute_correlation
+net_spend,historical_customer_value,1,1
+gross_spend,historical_customer_value,0.992884729,0.992884729
+gross_spend,net_spend,0.992884729,0.992884729

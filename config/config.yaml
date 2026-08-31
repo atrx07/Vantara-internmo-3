@@ -110,3 +110,12 @@ outputs:
   product_frequency_encoding: data/processed/product_frequency_encoding.parquet
   preprocessing_artifacts: data/processed/preprocessing_contracts.joblib
   step02_metadata: data/processed/step02_metadata.json
+
+analysis:
+  evidence_directory: reports/eda
+  data_freeze_directory: reports/data_freeze
+  churn_feature_schema: models_artifacts/churn_feature_schema.json
+  correlation_threshold: 0.95
+  vif_threshold: 10.0
+  feature_schema_version: vantara-churn-features-v1
+  top_countries: 15

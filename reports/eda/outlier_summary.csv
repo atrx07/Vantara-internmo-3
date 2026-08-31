@@ -1,0 +1,8 @@
+quality_flag,rows,proportion
+is_missing_customer_id,235151,0.2276309829
+is_return,22496,0.02177658862
+is_cancelled_invoice,19104,0.01849306317
+is_non_positive_price,6019,0.005826515242
+is_administrative_line,5821,0.005634847188
+is_statistical_outlier,81830,0.07921311552
+is_likely_data_error,0,0

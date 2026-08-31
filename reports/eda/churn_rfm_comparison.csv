@@ -1,0 +1,3 @@
+churn,recency_days_median,recency_days_mean,frequency_orders_median,frequency_orders_mean,gross_spend_median,gross_spend_mean,net_spend_median,net_spend_mean,avg_order_value_median,avg_order_value_mean
+0,78.87152778,127.6352396,6,9.7667295,1785.065,4849.925528,1739.505,4727.600745,306.6892857,398.83976
+1,291.8541667,284.636251,2,3.130388693,499.75,1147.053336,491.205,1079.244774,247.24,349.772449

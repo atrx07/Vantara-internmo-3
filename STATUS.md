@@ -2,6 +2,53 @@
 
 > MUTABLE STATE FILE. Codex may edit this file. It must contain observed facts and evidence, never optimistic assumptions.
 
+## STEP 03 — EDA + Data Freeze
+
+- Authorization: owner explicitly approved continuation into STEP 03 on 2026-08-31.
+- Scope status: IMPLEMENTATION AND VALIDATION COMPLETE; COMMIT/PUSH PENDING.
+- Scope boundary: no STEP 04 model training, MLflow experiments, segmentation, next-category model, or recommender was implemented.
+- Pre-step HEAD: `3430014657b6184ee48e14cdabe669705bc4abce`.
+
+### End-to-end M1 pipeline
+
+- Canonical command: `.venv\Scripts\python.exe -m src.pipeline --config config\config.yaml`.
+- Full immutable-workbook execution: PASS — loader, source validation, cleaning, interim Parquet, snapshots, targets, feature tables, training-only product artifacts, shared customer split, preprocessing contracts, EDA, and schema freeze completed without notebook intervention.
+- Final full-run rows: `1,033,036` cleaned transactions and `4,952` eligible customer rows.
+- STEP 02 generated data fingerprints remained stable through the M1 run.
+- Raw source/canonical copy were not modified or tracked.
+
+### Required notebooks and EDA
+
+- `notebooks/01_eda.ipynb`: PASS — 14 cells, 7/7 code cells executed, zero error outputs.
+- `notebooks/02_feature_engineering.ipynb`: PASS — 11 cells, 5/5 code cells executed, zero error outputs.
+- Both notebooks are consumers of `src.analysis.eda` and persisted evidence; tests prohibit notebook-owned groupby/split/taxonomy production logic.
+- Required analyses present: spend/frequency/recency distributions, churn class balance, training-only correlations, VIF, country analysis, monthly/quarter seasonality, and outlier/data-quality review.
+- Seven explicit modeling hypotheses are recorded at `reports/eda/hypotheses.md`.
+- Observed EDA highlights: median recency `291.9` days for churned versus `78.9` for active customers; median order frequency `2.0` versus `6.0`; observed gross-revenue peak month `2011-11`; United Kingdom share among displayed top-country revenue `86.6%`.
+- Five static figures and six evidence tables were generated under `reports/eda/` and visually inspected.
+
+### Correlation, VIF, and frozen schema
+
+- Correlation/VIF fitting population: shared training partition only (`3,466` customers).
+- Pearson high-correlation threshold: `0.95`; observed high-correlation pairs: `3`.
+- VIF threshold: `10.0`; maximum final VIF: `9.5125581744` — PASS.
+- Canonical schema: `models_artifacts/churn_feature_schema.json`, version `vantara-churn-features-v1`.
+- Frozen churn model feature count/order: `47`; this exact schema is required for all six classical churn models and the ANN.
+- Documented exclusions: `category_affinity_unknown` as the reference category; exact duplicate `historical_customer_value`; highly correlated `gross_spend` in favor of return-aware `net_spend`; `category_affinity_00` at training VIF `45.749312`; and `engagement_score` at training VIF `15.896621`.
+- The complete 52-feature business table remains unchanged; exclusions affect only the final churn model input schema.
+- Evidence: correlation matrix, three high-correlation pairs, initial/final VIF tables, and data-freeze summary under `reports/data_freeze/`.
+- Determinism: all 18 tracked EDA/data-freeze/schema evidence files produced identical SHA-256 values after a repeated STEP 03 analysis run.
+
+### STEP 03 validation and M1 acceptance
+
+- `pytest --cov=src --cov-report=term-missing --cov-fail-under=70 -q`: PASS — `35 passed`, source coverage `85.10%`.
+- Ruff: PASS, including notebook code cells.
+- Black check: PASS for Python source (`34` files unchanged); Black reported notebooks skipped because its optional Jupyter extra is not installed, while Ruff and executed-notebook validation passed.
+- `pip check`: PASS; compileall: PASS.
+- Governance reference lock: PASS — 30 immutable files verified.
+- M1 acceptance: PASS — workbook, both-sheet ingestion, cleaning, required features, churn/CLV targets, taxonomy/affinities, shared split, leakage tests, required notebooks, EDA, correlation/VIF evidence, and single-command pipeline all have executed evidence.
+- Environment warnings: Joblib used logical-core fallback because WMIC physical-core discovery is unavailable; Matplotlib dependency deprecation warnings occurred during tests; Jupyter required temporary workspace/local-temp runtime directories because user-profile writes are sandbox-blocked. None caused a failed final gate.
+
 ## STEP 02 — Cleaning + Snapshot + Feature Pipeline
 
 - Authorization: owner explicitly approved continuation into STEP 02 on 2026-08-30.
@@ -176,11 +223,11 @@
 
 - Project status: INCOMPLETE
 - Current milestone: M1 — Data Ready
-- Current step: STEP 02 — Cleaning + Snapshot + Feature Pipeline
-- Step state: `STEP_COMPLETE_WAITING_FOR_APPROVAL`
-- Last owner-approved step: STEP 02
+- Current step: STEP 03 — EDA + Data Freeze
+- Step state: `VALIDATED_PENDING_COMMIT_AND_PUSH`
+- Last owner-approved step: STEP 03
 - M0 Governance Ready: PASS
-- M1 Data Ready: IN_PROGRESS
+- M1 Data Ready: PASS
 - M2 Intelligence Ready: NOT_STARTED
 - M3 Product Ready: NOT_STARTED
 
@@ -218,6 +265,7 @@
 ## Readiness and authorization boundary
 
 - STEP 01 implementation, validation, and implementation push: COMPLETE.
-- STEP 02 implementation, validation, and implementation push: COMPLETE.
-- STEP 03 is NOT AUTHORIZED.
-- Next authorized action: WAIT FOR OWNER APPROVAL.
+- STEP 02 implementation, validation, and all pushes: COMPLETE.
+- STEP 03 implementation and validation: COMPLETE; commit and push are the remaining authorized actions.
+- STEP 04 is NOT AUTHORIZED.
+- After a green push, next authorized action: WAIT FOR OWNER APPROVAL.
