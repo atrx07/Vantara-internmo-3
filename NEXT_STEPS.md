@@ -4,16 +4,16 @@
 
 ## Next step
 
-### STEP 04 — Classical ML + CLV + Segmentation + Product Intelligence
+### STEP 05 — Deep Learning
 
 Status: `WAITING_FOR_OWNER_APPROVAL`
 
-STEP 03 implementation, validation, and primary implementation push are complete. After the owner-authorized governance/state-finalization commit and report, no STEP 04 work may begin until the owner explicitly approves STEP 04 in chat.
+STEP 04 implementation, validation, artifacts, evidence, notebook execution, and owner-authorized commit/push are complete. No STEP 05 work may begin until the owner explicitly approves STEP 05 in chat.
 
-If approved later, STEP 04 will execute only its locked roadmap scope: six classical churn models, Ridge and XGBRegressor CLV candidates, K-Means and GMM segmentation, next-purchase-category LightGBM plus baseline, item-to-item recommendations and offline evaluation, training-only CV/tuning, local MLflow evidence, and the required model-experiments notebook as a consumer of `src/` logic. The final held-out test remains untouched.
+If approved later, STEP 05 will execute only its locked roadmap scope: the PyTorch ANN on the exact frozen churn schema, rolling grouped customer snapshots for the 30-day next-purchase LSTM, the PyTorch autoencoder anomaly model, early stopping/loss evidence, grouped LSTM validation, serialized deep-learning artifacts, reload/inference smoke checks, and required metrics. The final held-out test remains untouched.
 
 ## Current authorized action
 
 `WAIT FOR OWNER APPROVAL.`
 
-Do not begin STEP 04 automatically.
+Do not begin STEP 05 automatically.

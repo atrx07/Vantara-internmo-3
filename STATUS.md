@@ -2,6 +2,59 @@
 
 > MUTABLE STATE FILE. Codex may edit this file. It must contain observed facts and evidence, never optimistic assumptions.
 
+## STEP 04 — Classical ML + CLV + Segmentation + Product Intelligence
+
+- Authorization: owner explicitly approved continuation into STEP 04 with `continue` and later confirmed continuation after context compaction on 2026-08-31.
+- Scope status: `STEP_COMPLETE_WAITING_FOR_APPROVAL`.
+- Scope boundary: no STEP 05 ANN, rolling LSTM, or autoencoder work; no STEP 06 production-model selection, threshold freeze, explainability, or final held-out test evaluation.
+- Pre-step HEAD: `af1852eb804a4d34b1edc445d0b390bddf52805a`.
+- Canonical command: `.venv\Scripts\python.exe -m src.models.step04_pipeline --config config/config.yaml` — PASS on the full governed M1 artifacts.
+- Split discipline: five-fold training-only CV/tuning; validation-only comparison evidence; the final `test` population was neither scored nor used for target generation, preprocessing, selection, or reported metrics.
+
+### Classical churn models
+
+- Exactly six required models trained and serialized on the exact `vantara-churn-features-v1` 47-feature order: Logistic Regression, Decision Tree, Random Forest, XGBoost, LightGBM, and SVM.
+- Every run records parameters, CV metrics, validation Accuracy/Precision/Recall/F1/ROC-AUC/confusion matrix, training time, source hash, schema version, split version, seed `42`, and local MLflow run ID.
+- Highest validation ROC-AUC: Logistic Regression `0.8038210831`, with recall `0.7331730769`.
+- Random Forest validation ROC-AUC `0.8015868334`, recall `0.7788461538`; SVM produced the highest validation recall `0.8221153846` with ROC-AUC `0.7874255250`.
+- Production selection and threshold optimization are intentionally deferred to STEP 06; STEP 04 does not freeze a winner.
+
+### CLV regression
+
+- Ridge baseline and XGBRegressor candidate use `log1p` target modeling and five folds stratified on training-only target quantiles.
+- Predictions are nonnegative and capped by a bound learned independently from each fit's training-target maximum, preventing log-inverse extrapolation outside observed training support without using validation/test values.
+- Ridge validation: MAE `475.2176610896`, RMSE `1083.6206152548`, R2 `0.9684629277`; mean CV R2 `-2.1797938355` shows material fold instability and is carried as a warning rather than hidden.
+- XGBRegressor validation: MAE `626.0065210641`, RMSE `5693.9093410618`, R2 `0.1292610877`; mean CV R2 `0.3169980681`.
+- These are validation results only; the PRD final held-out CLV target is not claimed as achieved before STEP 06.
+
+### Segmentation and product intelligence
+
+- K-Means candidates `k=3..8` evaluated with inertia, Silhouette, and Davies-Bouldin; selected `k=8` by highest training silhouette `0.3052447809` (Davies-Bouldin `1.1009530648`).
+- GMM candidates `2..8` evaluated with BIC, Silhouette, and Davies-Bouldin; selected `8` by lowest BIC `-35988.1604784577` (Silhouette `0.1086794699`, Davies-Bouldin `2.4075170649`).
+- Business-readable profiles and PCA(2) visualization data were generated; clustering used ten interpretable standardized behavioral features, not PCA coordinates or full affinity vectors.
+- Next-category target uses each eligible train/validation customer's first valid invoice after the cutoff, frozen taxonomy plus explicit unknown category, and deterministic value/quantity/category tie-breaking.
+- Next-category LightGBM validation: macro-F1 `0.0898417858`, Top-1 `0.3312883436`, Top-3 `0.5858895706`; most-popular baseline: macro-F1 `0.0194515306`, Top-1 `0.3742331288`, Top-3 `0.5521472393`. Six of 31 training classes have fewer than five examples, limiting stratification and macro performance; categories were not merged or relabeled to improve metrics.
+- Item-to-item recommender: training customers only, `log1p(quantity)` implicit weights, cosine similarity, segment-popularity fallback, leave-last-order-out on `2,670` eligible customers. Recall@5 `0.0396743526`, HitRate@5 `0.3539325843`, catalog coverage `0.2412579723` across `4,569` catalog items.
+
+### Evidence, artifacts, and notebook
+
+- Local MLflow: `23` successful runs (6 churn, 2 CLV, 13 segmentation candidates, 1 next-category, 1 recommender); local runtime store remains ignored and untracked, with a tracked run-summary export under `reports/modeling/`.
+- Eleven serialized STEP 04 artifacts were reloaded successfully and exercised; largest artifact is `next_category_lightgbm.joblib` at approximately `10.51 MB`, below the governance size gate.
+- `notebooks/03_model_experiments.ipynb`: PASS — 15 cells, 7/7 code cells executed, zero error outputs; tests prohibit notebook-owned fitting logic.
+- Generated tracked evidence includes churn/CLV comparisons, all confusion matrices, segmentation selection/profiles/PCA sample, next-category baseline comparison, recommender metrics, MLflow summary, reload audit, and STEP 04 summary.
+- Environment warnings: LightGBM/scikit-learn emitted feature-name and rare-multiclass warnings; Joblib used logical-core fallback because WMIC is unavailable; Jupyter used a temporary local runtime and emitted the Windows Proactor selector-thread warning. None failed a final gate.
+
+### STEP 04 validation
+
+- `python -m src.models.step04_pipeline --config config/config.yaml`: PASS on the real full M1 artifacts after the final held-out-customer filtering change.
+- `pytest --cov=src --cov-report=term-missing --cov-fail-under=70 -q`: PASS — `47 passed`, source coverage `87.15%`.
+- Synthetic orchestration test: PASS — all six churn families, both CLV families, K-Means, GMM, next-category, recommender, 12 temporary MLflow runs, 11 reload checks, and no final-test access exercised from temporary data.
+- Ruff: PASS for repository Python and all three executed notebooks; Black: PASS for Python source.
+- `pip check`: PASS; `compileall`: PASS.
+- Governance reference lock: PASS — 30 immutable files verified.
+- Raw source/canonical-copy SHA-256 and Git protection: PASS — exact expected hash on both; neither workbook tracked; both ignored.
+- Artifact/runtime audit: PASS — 11 tracked joblib artifacts total `16,447,430` bytes, maximum `10,509,998` bytes; MLflow runtime store, generated processed data, caches, and temporary Jupyter runtime remain ignored/untracked.
+
 ## STEP 03 — EDA + Data Freeze
 
 - Authorization: owner explicitly approved continuation into STEP 03 on 2026-08-31.
@@ -215,7 +268,7 @@
 - Bound remote: `origin` -> `https://github.com/atrx07/Vantara-internmo-3.git` (fetch and push URLs).
 - Connectivity: PASS after approved network access.
 - Fetch: PASS.
-- Remote refs/history: `refs/heads/main` exists and contains the green STEP 01 history.
+- Remote refs/history: `refs/heads/main` exists at the completed STEP 03 governance/state commit before the STEP 04 push.
 - Remote default branch: `main`.
 - Local/remote history conflict: NONE.
 - Pushes during STEP 00: NONE.
@@ -223,13 +276,13 @@
 ## Execution
 
 - Project status: INCOMPLETE
-- Current milestone: M1 — Data Ready
-- Current step: STEP 03 — EDA + Data Freeze
+- Current milestone: M2 — Intelligence Ready
+- Current step: STEP 04 — Classical ML + CLV + Segmentation + Product Intelligence
 - Step state: `STEP_COMPLETE_WAITING_FOR_APPROVAL`
-- Last owner-approved step: STEP 03
+- Last owner-approved step: STEP 04
 - M0 Governance Ready: PASS
 - M1 Data Ready: PASS
-- M2 Intelligence Ready: NOT_STARTED
+- M2 Intelligence Ready: IN_PROGRESS
 - M3 Product Ready: NOT_STARTED
 
 ## Validation evidence
@@ -243,6 +296,8 @@
 - `git ls-remote --symref ...` and full `git ls-remote ...` — PASS — remote exists and is empty.
 - `git fetch origin` — PASS — no refs fetched because remote is empty.
 - Final governance-lock, source-hash, dataset-hash, and working-tree rechecks — PASS — lock still verifies all 30 immutable files; source/dataset hashes and dataset timestamp remain unchanged; only the two permitted state files were edited in the working tree, with required Git metadata initialized separately.
+- STEP 04 full modeling command — PASS — 23 local MLflow runs, 11 reload-validated artifacts, all required validation evidence, and no final-test metrics.
+- STEP 04 notebook execution — PASS — 7/7 code cells executed with zero error outputs.
 
 ## Commits / pushes
 
@@ -256,7 +311,8 @@
 - STEP 02 state-finalization commit: this status record is committed separately after the implementation push; its exact hash and pushed ref are recorded in the chat handoff because a commit cannot contain its own hash.
 - STEP 03 implementation commit: `f7fa9782ee57206ef57b0fd4c8b124741ceccdd0` — `step-03: complete EDA and freeze data foundation`.
 - STEP 03 implementation push: PASS — advanced `refs/heads/main` from `3430014657b6184ee48e14cdabe669705bc4abce` to `f7fa9782ee57206ef57b0fd4c8b124741ceccdd0`.
-- STEP 03 governance/state-finalization commit: this status record is committed separately after the implementation push; its exact hash and pushed ref are recorded in the chat handoff because a commit cannot contain its own hash.
+- STEP 03 governance/state-finalization commit: `af1852eb804a4d34b1edc445d0b390bddf52805a` — `governance: authorize green pushes and finalize step 03`; push advanced `refs/heads/main` from `f7fa9782ee57206ef57b0fd4c8b124741ceccdd0` to this hash.
+- STEP 04 implementation/state commit: this record is committed with the green STEP 04 implementation; its exact hash and pushed ref are reported in the chat handoff because a commit cannot contain its own hash.
 
 ## Blockers / warnings
 
@@ -265,11 +321,15 @@
 - Remote branch: PASS — `origin/main` is established and is the remote default branch.
 - Warning: DOCX visual rendering was unavailable; structural/content/hash inspection completed successfully.
 - Warning: use command-scoped Git `safe.directory` in this Codex environment; no global exception was installed.
+- Warning: next-category data contain 31 classes, including 6 training classes with fewer than 5 examples; the locked five-fold stratification therefore has sparse class support, and actual macro metrics are preserved.
+- Warning: Ridge CLV validation R2 is high while mean training-CV R2 is negative, indicating sensitivity to the extreme-value distribution; no final-test or production claim is made.
+- Warning: both segmentation selection rules chose the upper configured candidate boundary (`8`); this is recorded evidence, not an unreported search expansion.
 
 ## Readiness and authorization boundary
 
 - STEP 01 implementation, validation, and implementation push: COMPLETE.
 - STEP 02 implementation, validation, and all pushes: COMPLETE.
-- STEP 03 implementation, validation, and implementation push: COMPLETE. The owner-authorized governance/state-finalization commit is the remaining STEP 03 bookkeeping action.
-- STEP 04 is NOT AUTHORIZED.
+- STEP 03 implementation, validation, and all pushes: COMPLETE.
+- STEP 04 implementation, validation, evidence, artifacts, and notebook: COMPLETE. This record accompanies the owner-authorized green STEP 04 commit/push; its exact Git evidence is reported in the chat handoff.
+- STEP 05 is NOT AUTHORIZED.
 - After a green push, next authorized action: WAIT FOR OWNER APPROVAL.

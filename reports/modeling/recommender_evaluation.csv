@@ -1,0 +1,2 @@
+model,recall_at_5,hit_rate_at_5,catalog_coverage,evaluated_customers,training_customers,eligible_evaluation_customers,catalog_items,neighbors,top_k,weighting,evaluation_seconds,mlflow_run_id,artifact,held_out_test_accessed
+item_to_item_cosine,0.03967435256939816,0.3539325842696629,0.24125797228942159,2670.0,3466,2670,4569,25,5,log1p_quantity,3.041593600064516,b91c4523e7744db3b86db04c82fe4f00,item_to_item_recommender.joblib,False

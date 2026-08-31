@@ -1,0 +1,57 @@
+[
+  {
+    "artifact": "churn_decision_tree.joblib",
+    "reload": "PASS",
+    "sample_output": 0.5908603431839841
+  },
+  {
+    "artifact": "churn_lightgbm.joblib",
+    "reload": "PASS",
+    "sample_output": 0.6272402674693524
+  },
+  {
+    "artifact": "churn_logistic_regression.joblib",
+    "reload": "PASS",
+    "sample_output": 0.4485974363612683
+  },
+  {
+    "artifact": "churn_random_forest.joblib",
+    "reload": "PASS",
+    "sample_output": 0.550013641198156
+  },
+  {
+    "artifact": "churn_svm.joblib",
+    "reload": "PASS",
+    "sample_output": 0.6998162276681731
+  },
+  {
+    "artifact": "churn_xgboost.joblib",
+    "reload": "PASS",
+    "sample_output": 0.6180879473686218
+  },
+  {
+    "artifact": "clv_ridge.joblib",
+    "reload": "PASS",
+    "sample_output": 139.03487022817873
+  },
+  {
+    "artifact": "clv_xgboost_regressor.joblib",
+    "reload": "PASS",
+    "sample_output": 98.5238265991211
+  },
+  {
+    "artifact": "next_category_lightgbm.joblib",
+    "reload": "PASS",
+    "sample_output": 0
+  },
+  {
+    "artifact": "segmentation_bundle.joblib",
+    "reload": "PASS",
+    "sample_output": 3
+  },
+  {
+    "artifact": "item_to_item_recommender.joblib",
+    "reload": "PASS",
+    "sample_output": 4569
+  }
+]

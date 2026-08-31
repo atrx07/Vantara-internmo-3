@@ -1,0 +1,3 @@
+model,macro_f1,top_1_accuracy,top_3_accuracy,training_rows,validation_rows,classes,rare_training_classes_below_five,held_out_test_accessed,cv_macro_f1_mean,cv_top_1_accuracy_mean,best_parameters,training_seconds,mlflow_run_id,artifact
+most_popular_category_baseline,0.019451530612244895,0.37423312883435583,0.5521472392638037,1504,326,31,6,False,,,,,,
+lightgbm_multiclass,0.08984178581859241,0.3312883435582822,0.5858895705521472,1504,326,31,6,False,0.10650259999087966,0.36701218161683274,"{""model__learning_rate"": 0.07, ""model__min_child_samples"": 30, ""model__n_estimators"": 180, ""model__num_leaves"": 20}",86.1565293999156,92d411e24a9f4200b499e5bf06ea9734,next_category_lightgbm.joblib

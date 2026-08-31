@@ -1,0 +1,143 @@
+{
+  "artifact_reload_checks": [
+    {
+      "artifact": "churn_decision_tree.joblib",
+      "reload": "PASS",
+      "sample_output": 0.5908603431839841
+    },
+    {
+      "artifact": "churn_lightgbm.joblib",
+      "reload": "PASS",
+      "sample_output": 0.6272402674693524
+    },
+    {
+      "artifact": "churn_logistic_regression.joblib",
+      "reload": "PASS",
+      "sample_output": 0.4485974363612683
+    },
+    {
+      "artifact": "churn_random_forest.joblib",
+      "reload": "PASS",
+      "sample_output": 0.550013641198156
+    },
+    {
+      "artifact": "churn_svm.joblib",
+      "reload": "PASS",
+      "sample_output": 0.6998162276681731
+    },
+    {
+      "artifact": "churn_xgboost.joblib",
+      "reload": "PASS",
+      "sample_output": 0.6180879473686218
+    },
+    {
+      "artifact": "clv_ridge.joblib",
+      "reload": "PASS",
+      "sample_output": 139.03487022817873
+    },
+    {
+      "artifact": "clv_xgboost_regressor.joblib",
+      "reload": "PASS",
+      "sample_output": 98.5238265991211
+    },
+    {
+      "artifact": "next_category_lightgbm.joblib",
+      "reload": "PASS",
+      "sample_output": 0
+    },
+    {
+      "artifact": "segmentation_bundle.joblib",
+      "reload": "PASS",
+      "sample_output": 3
+    },
+    {
+      "artifact": "item_to_item_recommender.joblib",
+      "reload": "PASS",
+      "sample_output": 4569
+    }
+  ],
+  "best_validation_churn": {
+    "model": "logistic_regression",
+    "recall": 0.7331730769230769,
+    "roc_auc": 0.8038210830580463
+  },
+  "best_validation_clv": {
+    "model": "ridge",
+    "r2": 0.968462927659284,
+    "rmse": 1083.6206152548364
+  },
+  "churn_models": [
+    "logistic_regression",
+    "random_forest",
+    "xgboost",
+    "decision_tree",
+    "svm",
+    "lightgbm"
+  ],
+  "feature_count": 47,
+  "feature_schema_version": "vantara-churn-features-v1",
+  "held_out_test_accessed": false,
+  "mlflow_run_count": 23,
+  "next_category": [
+    {
+      "artifact": null,
+      "best_parameters": null,
+      "classes": 31,
+      "cv_macro_f1_mean": null,
+      "cv_top_1_accuracy_mean": null,
+      "held_out_test_accessed": false,
+      "macro_f1": 0.0194515306,
+      "mlflow_run_id": null,
+      "model": "most_popular_category_baseline",
+      "rare_training_classes_below_five": 6,
+      "top_1_accuracy": 0.3742331288,
+      "top_3_accuracy": 0.5521472393,
+      "training_rows": 1504,
+      "training_seconds": null,
+      "validation_rows": 326
+    },
+    {
+      "artifact": "next_category_lightgbm.joblib",
+      "best_parameters": "{\"model__learning_rate\": 0.07, \"model__min_child_samples\": 30, \"model__n_estimators\": 180, \"model__num_leaves\": 20}",
+      "classes": 31,
+      "cv_macro_f1_mean": 0.1065026,
+      "cv_top_1_accuracy_mean": 0.3670121816,
+      "held_out_test_accessed": false,
+      "macro_f1": 0.0898417858,
+      "mlflow_run_id": "92d411e24a9f4200b499e5bf06ea9734",
+      "model": "lightgbm_multiclass",
+      "rare_training_classes_below_five": 6,
+      "top_1_accuracy": 0.3312883436,
+      "top_3_accuracy": 0.5858895706,
+      "training_rows": 1504,
+      "training_seconds": 86.1565293999,
+      "validation_rows": 326
+    }
+  ],
+  "recommender": [
+    {
+      "artifact": "item_to_item_recommender.joblib",
+      "catalog_coverage": 0.2412579723,
+      "catalog_items": 4569,
+      "eligible_evaluation_customers": 2670,
+      "evaluated_customers": 2670.0,
+      "evaluation_seconds": 3.0415936001,
+      "held_out_test_accessed": false,
+      "hit_rate_at_5": 0.3539325843,
+      "mlflow_run_id": "b91c4523e7744db3b86db04c82fe4f00",
+      "model": "item_to_item_cosine",
+      "neighbors": 25,
+      "recall_at_5": 0.0396743526,
+      "top_k": 5,
+      "training_customers": 3466,
+      "weighting": "log1p_quantity"
+    }
+  ],
+  "seed": 42,
+  "segment_profile_rows": 16,
+  "selected_gmm_components": 8,
+  "selected_kmeans_components": 8,
+  "source_sha256": "bcbe73b35f5b7babf197fb0cb983a11f5d9ff929078d4aa53d171b1f2df2e980",
+  "split_version": "vantara-customer-split-v1",
+  "step": "STEP 04"
+}

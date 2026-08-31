@@ -1,6 +1,6 @@
 # Vantara Customer Behavior Prediction Platform
 
-Vantara is a governed, batch-oriented retail analytics prototype. The repository is built through owner-approved roadmap steps; Milestone M1 now provides immutable ingestion, cleaning, point-in-time targets/features, a shared customer split, frozen product artifacts, reproducible EDA, and a versioned churn feature schema.
+Vantara is a governed, batch-oriented retail analytics prototype. Milestone M1 provides immutable ingestion, cleaning, point-in-time targets/features, a shared customer split, frozen product artifacts, reproducible EDA, and a versioned churn feature schema. STEP 04 adds validation-stage classical churn and CLV experiments, customer segmentation, next-category prediction, and item recommendations without accessing the final held-out test.
 
 ## Development setup
 
@@ -40,6 +40,14 @@ python -m src.pipeline --config config/config.yaml
 ```
 
 This regenerates the data foundation, tracked EDA/data-freeze evidence under `reports/`, and the canonical `models_artifacts/churn_feature_schema.json`. The required `notebooks/01_eda.ipynb` and `notebooks/02_feature_engineering.ipynb` are executed analysis consumers; they do not own production transformations.
+
+Run the STEP 04 training and product-intelligence pipeline after the M1 outputs exist:
+
+```powershell
+python -m src.models.step04_pipeline --config config/config.yaml
+```
+
+The command performs five-fold training-only model searches, validation-only evaluation, local MLflow logging, serialization, and artifact-reload checks. Tracked evidence is written under `reports/modeling/`, serving candidates under `models_artifacts/step04/`, and the required executed `notebooks/03_model_experiments.ipynb` remains a consumer of source-generated evidence. The local `mlruns/` store is intentionally ignored. Production churn selection, threshold freezing, explainability, and the one-time final held-out evaluation remain deferred to STEP 06.
 
 Run the current quality gates:
 
