@@ -4,16 +4,16 @@
 
 ## Next step
 
-### STEP 07 — PostgreSQL + FastAPI
+### STEP 08 — Streamlit Dashboard + Reports
 
 Status: `WAITING_FOR_OWNER_APPROVAL`
 
-STEP 06 validation comparison, production freeze, explainability, serving inventory, single held-out evaluation, validation, evidence, and owner-authorized commit/push are complete. No STEP 07 work may begin until the owner explicitly approves STEP 07 in chat.
+STEP 07 PostgreSQL schema/migration, deterministic serving-data initialization, FastAPI endpoints, validation, artifact loading, persistence, tests, and owner-authorized commit/push are complete. No STEP 08 work may begin until the owner explicitly approves STEP 08 in chat.
 
-If approved later, STEP 07 will execute only its locked roadmap scope: PostgreSQL models/schema, Alembic migrations, deterministic serving-data initialization, FastAPI application and lifespan artifact loading, governed health/metadata/prediction/batch/supporting endpoints, Pydantic validation, prediction/segment persistence, and required API/database validation.
+If approved later, STEP 08 will execute only its locked roadmap scope: Streamlit executive overview, segment filters/view, churn priority leaderboard, customer explorer with XAI, revenue trend and Holt-Winters forecast, batch CSV upload, CSV/PDF downloads, model insights, API-only frontend data access, caching/error states, and required dashboard validation.
 
 ## Current authorized action
 
 `WAIT FOR OWNER APPROVAL.`
 
-Do not begin STEP 07 automatically.
+Do not begin STEP 08 automatically.

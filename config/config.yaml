@@ -253,3 +253,10 @@ model_freeze:
     lime_features: 10
     pdp_features: 3
     other_model_sample_size: 200
+
+serving:
+  api_prefix: /api/v1
+  batch_maximum_bytes: 10485760
+  batch_maximum_rows: 100000
+  batch_maximum_customers: 1000
+  recommendation_limit: 5

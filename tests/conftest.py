@@ -1,5 +1,7 @@
 """Reusable STEP 01 test fixtures."""
 
+import os
+from collections.abc import Generator
 from pathlib import Path
 
 import pandas as pd
@@ -167,3 +169,44 @@ def step02_transactions(cleaning_config: dict[str, object]) -> pd.DataFrame:
     frame["country"] = frame["country"].astype("string")
     cleaned, _ = clean_transactions(frame, cleaning_config=cleaning_config)
     return cleaned
+
+
+@pytest.fixture(scope="session")
+def migrated_runtime(
+    tmp_path_factory: pytest.TempPathFactory,
+) -> Generator[dict[str, object], None, None]:
+    """Create, migrate, and seed one fresh disposable STEP 07 serving database."""
+    from alembic import command
+    from alembic.config import Config
+
+    from api.artifacts import ArtifactRegistry
+    from api.database import create_database_engine
+    from api.initialization import initialize_serving_data
+    from src.utils.config import load_config
+
+    root = Path(__file__).resolve().parents[1]
+    database_path = tmp_path_factory.mktemp("step07") / "serving.sqlite"
+    database_url = f"sqlite:///{database_path.as_posix()}"
+    previous = os.environ.get("DATABASE_URL")
+    os.environ["DATABASE_URL"] = database_url
+    try:
+        alembic = Config(str(root / "alembic.ini"))
+        command.upgrade(alembic, "head")
+        engine = create_database_engine(database_url)
+        registry = ArtifactRegistry(root, root / "models_artifacts")
+        config = load_config(root / "config" / "config.yaml")
+        counts = initialize_serving_data(engine, root, registry, config)
+        yield {
+            "root": root,
+            "database_url": database_url,
+            "engine": engine,
+            "registry": registry,
+            "config": config,
+            "counts": counts,
+        }
+        engine.dispose()
+    finally:
+        if previous is None:
+            os.environ.pop("DATABASE_URL", None)
+        else:
+            os.environ["DATABASE_URL"] = previous

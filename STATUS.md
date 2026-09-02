@@ -2,6 +2,27 @@
 
 > MUTABLE STATE FILE. Codex may edit this file. It must contain observed facts and evidence, never optimistic assumptions.
 
+## STEP 07 — PostgreSQL + FastAPI
+
+- Authorization: owner explicitly approved continuation into STEP 07 with `continue` and later resumed the same step after usage-limit interruptions.
+- Scope status: `STEP_COMPLETE_WAITING_FOR_APPROVAL`.
+- Pre-step HEAD: `dd4414ff106216958d98c0aa252d115758320d50` (`step-06: freeze models and record final evaluation`); pre-step local `HEAD` and `origin/main` matched.
+- Scope boundary: no STEP 08 Streamlit dashboard, report download, frontend, or forecast implementation was started.
+- Persistence: SQLAlchemy 2.x entities define customers, transactions, predictions, segments, and recommendations with required keys, foreign keys, constraints, indexes, version/timestamp fields, and customer-owned serving payloads.
+- Migration: Alembic revision `20260901_0001` creates the full serving schema and supports online and offline operation with `DATABASE_URL` supplied only through the environment.
+- Deterministic initialization: the serving init path loads the frozen 47-feature customer payloads, latest eligible LSTM sequences, K-Means segment assignments, and exactly five ranked recommendations per customer without retraining; it is idempotent unless replacement is explicitly requested. Optional transaction loading is chunked and remains off by default.
+- Initialized reference state: `4,952` customers, `4,952` segments, `24,760` recommendations, and `0` transactions by default.
+- Frozen serving support: byte-for-byte reference artifacts for product prices, frequency encoding, and preprocessing contracts were placed under `models_artifacts/serving_reference/`; model artifacts and hashes from the STEP 06 freeze remain authoritative and are loaded once during application lifespan.
+- FastAPI: application factory/lifespan, health, safe model metadata, single-customer prediction, canonical transaction-CSV batch prediction, customer summary/XAI/recommendations, segment summary/filtering, and revenue analytics endpoints are implemented under the configured `/api/v1` prefix.
+- Validation/persistence behavior: Pydantic and canonical batch-schema validation return explicit 4xx responses; every successful prediction is persisted with model/threshold/as-of metadata; batch features are server-derived and use the frozen schema; no request reloads model files.
+- Fresh PostgreSQL smoke: PASS on a disposable PostgreSQL `17.11` server. Alembic upgraded a new database to `20260901_0001`; initialization produced the exact reference counts; `/api/v1/health` returned `200`; a real frozen-artifact customer score returned `200` and persisted one prediction. The temporary server, database, runtime, archive, and log were stopped and removed afterward.
+- PostgreSQL dialect smoke: PASS — offline Alembic SQL compilation emitted the governed tables using the `postgresql+psycopg` dialect.
+- Focused STEP 07 tests: PASS — `11 passed`, including fresh migrations, schema/index checks, initializer completeness/idempotence, foreign keys, artifact failure, health/metadata, real scoring/persistence, no per-request reload, 4xx behavior, XAI/recommendations/segments/revenue, and canonical/malformed batch uploads.
+- Full repository validation: `pytest --cov=src --cov=api --cov-report=term-missing --cov-fail-under=70 -q` PASS — `72 passed`, `38 warnings`, combined branch coverage `78.45%`.
+- Quality gates: Ruff PASS; Black PASS (`80` Python files unchanged; notebooks skipped because Black's optional Jupyter extra is absent); `pip check` PASS; compileall PASS; `git diff --check` PASS.
+- Governance/raw-data audit: reference lock PASS for all `30` immutable files; root and canonical raw workbooks retain SHA-256 `bcbe73b35f5b7babf197fb0cb983a11f5d9ff929078d4aa53d171b1f2df2e980`; both are ignored and untracked. `.env`, database files, MLflow stores, caches, interim/processed data, and local generated runtime paths remain ignored.
+- Environment warnings: test output includes pre-existing Matplotlib/Pyparsing deprecation warnings, Joblib logical-core fallback because WMIC is unavailable, and LightGBM feature-name warnings. No warning failed a gate or changed evidence.
+
 ## STEP 06 — Model Freeze + XAI + Final Evaluation
 
 - Authorization: owner explicitly approved continuation into STEP 06 with `continue`.
@@ -346,14 +367,14 @@
 ## Execution
 
 - Project status: INCOMPLETE
-- Current milestone: M2 — Intelligence Ready
-- Current step: STEP 06 — Model Freeze + XAI + Final Evaluation
+- Current milestone: M3 — Product Ready
+- Current step: STEP 07 — PostgreSQL + FastAPI
 - Step state: `STEP_COMPLETE_WAITING_FOR_APPROVAL`
-- Last owner-approved step: STEP 06
+- Last owner-approved step: STEP 07
 - M0 Governance Ready: PASS
 - M1 Data Ready: PASS
 - M2 Intelligence Ready: PASS
-- M3 Product Ready: NOT_STARTED
+- M3 Product Ready: IN_PROGRESS
 
 ## Validation evidence
 
@@ -373,6 +394,8 @@
 - STEP 06 validation comparison/model/threshold freeze — PASS — seven churn candidates consolidated from logs; validation-only Random Forest and F2 threshold selected under the locked rule.
 - STEP 06 explainability — PASS — required SHAP/LIME/PDP/plain-language outputs and other-model adapters generated and inspected before final-test access.
 - STEP 06 one-time final evaluation — PASS — attempt 1 completed after freeze; five model families scored and immutable-style evidence persisted; no rerun occurred.
+- STEP 07 disposable live-PostgreSQL migration/init/API persistence smoke — PASS — PostgreSQL 17.11, Alembic revision `20260901_0001`, exact reference counts, health `200`, prediction `200`, one persisted prediction.
+- STEP 07 full repository test/coverage gate — PASS — `72 passed`, combined `src` + `api` branch coverage `78.45%`.
 
 ## Commits / pushes
 
@@ -390,6 +413,7 @@
 - STEP 04 implementation/state commit: this record is committed with the green STEP 04 implementation; its exact hash and pushed ref are reported in the chat handoff because a commit cannot contain its own hash.
 - STEP 05 implementation/state commit: this record is committed with the green STEP 05 implementation; its exact hash and pushed ref are reported in the chat handoff because a commit cannot contain its own hash.
 - STEP 06 implementation/state commit: this record will be committed with the green STEP 06 implementation; its exact hash and pushed ref are reported in the chat handoff because a commit cannot contain its own hash.
+- STEP 07 implementation/state commit: this record is committed with the green STEP 07 implementation; its exact hash and pushed ref are reported in the chat handoff because a commit cannot contain its own hash.
 
 ## Blockers / warnings
 
@@ -405,6 +429,7 @@
 - Warning: LSTM validation recall is `0.5895287958`; this is preserved honestly at the fixed comparison threshold and was not manipulated using test data.
 - Warning: CLV held-out R2 is `0.0307371581`, below the PRD target `0.60`; the result is final, is not eligible for test-set-driven retuning, and must be discussed in the final report as permitted by the acceptance contract.
 - Warning: the held-out final evaluation is permanently consumed at one attempt; neither the evaluator nor the model freeze may be rerun to change final evidence.
+- Warning: Docker remains unavailable on this host and was not a STEP 07 gate; Docker Compose belongs to STEP 09.
 
 ## Readiness and authorization boundary
 
@@ -414,5 +439,6 @@
 - STEP 04 implementation, validation, evidence, artifacts, and notebook: COMPLETE. This record accompanies the owner-authorized green STEP 04 commit/push; its exact Git evidence is reported in the chat handoff.
 - STEP 05 implementation, validation, evidence, artifacts, and notebook: COMPLETE. This record accompanies the owner-authorized green STEP 05 commit/push; its exact Git evidence is reported in the chat handoff.
 - STEP 06 implementation, validation-only selection, model freeze, explainability, single held-out evaluation, and evidence: COMPLETE. This record accompanies the owner-authorized green STEP 06 commit/push; its exact Git evidence is reported in the chat handoff.
-- STEP 07 is NOT AUTHORIZED.
+- STEP 07 database schema/migration, deterministic initialization, API, persistence, and validation: COMPLETE. This record accompanies the owner-authorized green STEP 07 commit/push; its exact Git evidence is reported in the chat handoff.
+- STEP 08 is NOT AUTHORIZED.
 - After a green push, next authorized action: WAIT FOR OWNER APPROVAL.
