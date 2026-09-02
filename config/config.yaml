@@ -260,3 +260,11 @@ serving:
   batch_maximum_rows: 100000
   batch_maximum_customers: 1000
   recommendation_limit: 5
+
+dashboard:
+  default_api_url: http://localhost:8000/api/v1
+  request_timeout_seconds: 20.0
+  cache_ttl_seconds: 60
+  forecast_periods: 6
+  seasonal_periods: 12
+  leaderboard_limit: 250

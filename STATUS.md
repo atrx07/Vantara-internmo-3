@@ -2,6 +2,26 @@
 
 > MUTABLE STATE FILE. Codex may edit this file. It must contain observed facts and evidence, never optimistic assumptions.
 
+## STEP 08 — Streamlit Dashboard + Reports
+
+- Authorization: owner explicitly approved continuation into STEP 08 with `continue` and later resumed the same step after usage-limit interruptions.
+- Scope status: `STEP_COMPLETE_WAITING_FOR_APPROVAL`.
+- Pre-step HEAD: `8b5745929b06aecc440925a8f1733599420cb277` (`step-07: add PostgreSQL persistence and FastAPI serving`); pre-step local `HEAD` and `origin/main` matched.
+- Scope boundary: no STEP 09 Docker Compose, benchmark, final documentation, final report, handover, or clean-clone acceptance work was started.
+- Dashboard foundation: a seven-view Streamlit application now provides executive overview, customer-segment exploration, churn-priority ranking, individual customer scoring/XAI, revenue history and forecast, canonical batch scoring, and model insights.
+- API-only boundary: the frontend uses an HTTPX API client and imports no database, model, serving-artifact, or persistence implementation. New FastAPI analytics endpoints provide safe overview, filtered retention-priority, model-insight, and churn-PDP payloads without exposing local paths, run IDs, or model parameters.
+- Retention prioritization: the latest persisted score per customer is ranked by the locked formula `minmax(churn_probability) * minmax(predicted_clv_180d)`, with segment, country, and value-tier filters and deterministic descending ordering.
+- Revenue forecast: additive damped-trend Holt-Winters with 12-month seasonality is used for at least 24 monthly observations; deterministic damped-trend and last-observation fallbacks handle shorter histories. Forecasts are nonnegative and clearly labeled as planning estimates, not guarantees.
+- Customer and batch workflows: known-customer scoring displays model version, as-of timestamp, segment, next-purchase/category context, recommendations, friendly SHAP drivers, and anomaly manual-review wording. Canonical CSV uploads are scored only through FastAPI and can be downloaded as auditable CSV or paginated landscape-A4 PDF.
+- Reporting audit: a generated 45-row sample PDF rendered as three pages; PDF structure, metadata, all customer IDs, repeated headers, cautions, and page footers were programmatically verified. All three pages were visually inspected with no clipping or overlap. The sample and rendered QA files were removed afterward.
+- Live visual/API QA: PASS against temporary local FastAPI, Streamlit, and seeded SQLite services. All seven views rendered; filters, customer scoring, model insight/PDP, a real batch upload, and both CSV/PDF browser downloads worked. Browser console warning/error log was empty. All temporary services, database, upload, and QA files were removed afterward.
+- Focused STEP 08 tests: PASS — `17 passed`, covering safe analytics endpoints, exact retention formula/order, API-client errors and HTTP-only behavior, forecast/fallbacks, CSV/PDF audit content, every required Streamlit view, customer XAI interaction, filter rerenders, and forbidden frontend imports.
+- Full repository validation: `pytest --cov=src --cov=api --cov-report=term-missing --cov-fail-under=70 -q` PASS — `89 passed`, `38 warnings`, combined branch coverage `78.85%`.
+- Quality gates: Ruff PASS; Black PASS (`83` Python files unchanged after formatting); `pip check` PASS; compileall PASS.
+- Governance/raw-data audit: reference lock PASS for all `30` immutable files; root and canonical raw workbooks retain SHA-256 `bcbe73b35f5b7babf197fb0cb983a11f5d9ff929078d4aa53d171b1f2df2e980`; both remain ignored and untracked. `.env`, database/runtime files, MLflow stores, caches, temporary files, and generated local artifacts remain ignored.
+- Dependency/environment state: no dependency was installed and no dependency manifest changed; STEP 08 uses the already locked Streamlit, HTTPX, Plotly, statsmodels, Pandas, and ReportLab environment. Installed Streamlit `1.47` predates the available bundled version-matched reference-doc workflow, so the official Streamlit documentation fallback was used and its temporary download was removed.
+- Environment warnings: the full test output retains pre-existing Matplotlib/Pyparsing deprecation warnings, Joblib logical-core fallback because WMIC is unavailable, and LightGBM feature-name warnings. No warning failed a gate or changed evidence.
+
 ## STEP 07 — PostgreSQL + FastAPI
 
 - Authorization: owner explicitly approved continuation into STEP 07 with `continue` and later resumed the same step after usage-limit interruptions.
@@ -368,9 +388,9 @@
 
 - Project status: INCOMPLETE
 - Current milestone: M3 — Product Ready
-- Current step: STEP 07 — PostgreSQL + FastAPI
+- Current step: STEP 08 — Streamlit Dashboard + Reports
 - Step state: `STEP_COMPLETE_WAITING_FOR_APPROVAL`
-- Last owner-approved step: STEP 07
+- Last owner-approved step: STEP 08
 - M0 Governance Ready: PASS
 - M1 Data Ready: PASS
 - M2 Intelligence Ready: PASS
@@ -396,6 +416,8 @@
 - STEP 06 one-time final evaluation — PASS — attempt 1 completed after freeze; five model families scored and immutable-style evidence persisted; no rerun occurred.
 - STEP 07 disposable live-PostgreSQL migration/init/API persistence smoke — PASS — PostgreSQL 17.11, Alembic revision `20260901_0001`, exact reference counts, health `200`, prediction `200`, one persisted prediction.
 - STEP 07 full repository test/coverage gate — PASS — `72 passed`, combined `src` + `api` branch coverage `78.45%`.
+- STEP 08 live visual/API/report audit — PASS — all seven required views, filters, customer scoring/XAI, batch upload, CSV/PDF downloads, model insights, report rendering, and browser-console checks completed successfully.
+- STEP 08 full repository test/coverage gate — PASS — `89 passed`, combined `src` + `api` branch coverage `78.85%`.
 
 ## Commits / pushes
 
@@ -414,6 +436,7 @@
 - STEP 05 implementation/state commit: this record is committed with the green STEP 05 implementation; its exact hash and pushed ref are reported in the chat handoff because a commit cannot contain its own hash.
 - STEP 06 implementation/state commit: this record will be committed with the green STEP 06 implementation; its exact hash and pushed ref are reported in the chat handoff because a commit cannot contain its own hash.
 - STEP 07 implementation/state commit: this record is committed with the green STEP 07 implementation; its exact hash and pushed ref are reported in the chat handoff because a commit cannot contain its own hash.
+- STEP 08 implementation/state commit: this record is committed with the green STEP 08 implementation; its exact hash and pushed ref are reported in the chat handoff because a commit cannot contain its own hash.
 
 ## Blockers / warnings
 
@@ -429,7 +452,7 @@
 - Warning: LSTM validation recall is `0.5895287958`; this is preserved honestly at the fixed comparison threshold and was not manipulated using test data.
 - Warning: CLV held-out R2 is `0.0307371581`, below the PRD target `0.60`; the result is final, is not eligible for test-set-driven retuning, and must be discussed in the final report as permitted by the acceptance contract.
 - Warning: the held-out final evaluation is permanently consumed at one attempt; neither the evaluator nor the model freeze may be rerun to change final evidence.
-- Warning: Docker remains unavailable on this host and was not a STEP 07 gate; Docker Compose belongs to STEP 09.
+- Warning: Docker remains unavailable on this host and was not a STEP 08 gate; Docker Compose and its live validation belong to STEP 09.
 
 ## Readiness and authorization boundary
 
@@ -440,5 +463,6 @@
 - STEP 05 implementation, validation, evidence, artifacts, and notebook: COMPLETE. This record accompanies the owner-authorized green STEP 05 commit/push; its exact Git evidence is reported in the chat handoff.
 - STEP 06 implementation, validation-only selection, model freeze, explainability, single held-out evaluation, and evidence: COMPLETE. This record accompanies the owner-authorized green STEP 06 commit/push; its exact Git evidence is reported in the chat handoff.
 - STEP 07 database schema/migration, deterministic initialization, API, persistence, and validation: COMPLETE. This record accompanies the owner-authorized green STEP 07 commit/push; its exact Git evidence is reported in the chat handoff.
-- STEP 08 is NOT AUTHORIZED.
+- STEP 08 dashboard, API-only analytics integration, filters, customer XAI, forecast, batch scoring, CSV/PDF reports, tests, and visual QA: COMPLETE. This record accompanies the owner-authorized green STEP 08 commit/push; its exact Git evidence is reported in the chat handoff.
+- STEP 09 is NOT AUTHORIZED.
 - After a green push, next authorized action: WAIT FOR OWNER APPROVAL.

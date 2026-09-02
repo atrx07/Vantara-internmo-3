@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import base64
 import hashlib
 import json
 from dataclasses import asdict, dataclass
@@ -81,6 +82,17 @@ class ArtifactRegistry:
         self.reference_prices = pd.read_parquet(references / "product_reference_prices.parquet")
         self.product_popularity = pd.read_parquet(references / "product_frequency_encoding.parquet")
         self.preprocessing_contracts = joblib.load(references / "preprocessing_contracts.joblib")
+        self.dashboard_reports = self._load_dashboard_reports()
+        partial_dependence = (
+            self.project_root / "reports" / "explainability" / "churn_partial_dependence.png"
+        )
+        if not partial_dependence.is_file():
+            raise ArtifactCompatibilityError(
+                f"Missing dashboard partial-dependence evidence: {partial_dependence}"
+            )
+        self.churn_partial_dependence_base64 = base64.b64encode(
+            partial_dependence.read_bytes()
+        ).decode("ascii")
         self.purchase_lstm, self.purchase_lstm_metadata = load_purchase_lstm(
             self.artifact_root / "next_purchase" / "purchase_lstm.pt"
         )
@@ -91,6 +103,25 @@ class ArtifactRegistry:
         self._validate_metadata()
         churn_pipeline = self.churn["pipeline"]
         self.churn_explainer = shap.TreeExplainer(churn_pipeline.named_steps["model"])
+
+    def _load_dashboard_reports(self) -> dict[str, pd.DataFrame]:
+        """Load safe tracked dashboard evidence once during application startup."""
+        paths = {
+            "global_churn_importance": "reports/explainability/churn_global_shap_importance.csv",
+            "churn_comparison": "reports/modeling/churn_model_comparison.csv",
+            "clv_comparison": "reports/modeling/clv_model_comparison.csv",
+            "next_category_evaluation": "reports/modeling/next_category_evaluation.csv",
+            "recommender_evaluation": "reports/modeling/recommender_evaluation.csv",
+            "segment_profiles": "reports/modeling/segment_profiles.csv",
+            "segment_pca": "reports/modeling/segmentation_pca_sample.csv",
+        }
+        reports: dict[str, pd.DataFrame] = {}
+        for name, relative in paths.items():
+            path = self.project_root / relative
+            if not path.is_file():
+                raise ArtifactCompatibilityError(f"Missing dashboard evidence: {path}")
+            reports[name] = pd.read_csv(path)
+        return reports
 
     def _validate_inventory(self) -> None:
         inventory = self.freeze.get("serving_artifacts", [])
@@ -262,3 +293,14 @@ class ArtifactRegistry:
                 "interpretation": "manual-review anomaly candidate; not confirmed fraud",
             },
         }
+
+    def dashboard_insights(self) -> dict[str, list[dict[str, Any]]]:
+        """Return JSON-safe global evidence without local paths or run identifiers."""
+        hidden = {"artifact", "mlflow_run_id", "best_parameters"}
+        payload: dict[str, list[dict[str, Any]]] = {}
+        for name, frame in self.dashboard_reports.items():
+            safe = frame.drop(
+                columns=[column for column in hidden if column in frame], errors="ignore"
+            )
+            payload[name] = json.loads(safe.to_json(orient="records"))
+        return payload

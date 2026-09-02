@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from datetime import datetime
+from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -94,3 +95,52 @@ class RevenuePointResponse(BaseModel):
 
     period: str
     revenue: float
+
+
+class OverviewResponse(BaseModel):
+    """Executive customer-health summary derived from persisted serving state."""
+
+    total_customers: int
+    scored_customers: int
+    segment_count: int
+    country_count: int
+    total_historical_net_spend: float
+    average_historical_net_spend: float
+    high_risk_customers: int
+    countries: list[str]
+    generated_at: datetime
+
+
+class PriorityCustomerResponse(BaseModel):
+    """Latest persisted score ranked by the locked retention-priority formula."""
+
+    customer_id: str
+    country: str | None
+    value_tier: str
+    segment_id: int
+    segment_name: str
+    scored_at: datetime
+    churn_probability: float
+    predicted_clv_180d: float
+    normalized_churn_probability: float
+    normalized_predicted_clv_180d: float
+    retention_priority: float
+
+
+class FeatureImportanceResponse(BaseModel):
+    """One global churn importance row."""
+
+    feature: str
+    mean_absolute_shap: float
+
+
+class ModelInsightsResponse(BaseModel):
+    """Safe dashboard-facing modeling and explainability evidence."""
+
+    global_churn_importance: list[FeatureImportanceResponse]
+    churn_comparison: list[dict[str, Any]]
+    clv_comparison: list[dict[str, Any]]
+    next_category_evaluation: list[dict[str, Any]]
+    recommender_evaluation: list[dict[str, Any]]
+    segment_profiles: list[dict[str, Any]]
+    segment_pca: list[dict[str, Any]]
