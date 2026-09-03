@@ -13,6 +13,7 @@ from src.data.cleaning import clean_transactions
 from src.data.validation import DataValidationError
 from src.features.customer_features import build_customer_features
 from src.features.product_artifacts import ProductArtifacts
+from src.models.clv_remediation import build_clv_features_for_cutoff
 
 CANONICAL_BATCH_COLUMNS = (
     "invoice",
@@ -189,6 +190,13 @@ def prepare_batch_customers(
         markdown_price_ratio=float(config["features"]["markdown_price_ratio"]),
     )
     features["engagement_score"] = preprocessing["engagement"]["churn"].transform(features)
+    clv_features = build_clv_features_for_cutoff(
+        cleaned,
+        customer_ids=customers,
+        cutoff=cutoff,
+        bulk_order_units=int(config["clv_remediation"]["bulk_order_units"]),
+        high_value_order_gbp=float(config["clv_remediation"]["high_value_order_gbp"]),
+    ).set_index("customer_id")
     sequences = build_latest_sequence_payloads(
         cleaned,
         taxonomy,
@@ -208,6 +216,9 @@ def prepare_batch_customers(
     for _, row in features.iterrows():
         customer_id = str(row["customer_id"])
         payload = {name: float(row[name]) for name in registry.feature_names}
+        payload.update(
+            {name: float(clv_features.at[customer_id, name]) for name in registry.clv_feature_names}
+        )
         rows.append(
             PreparedCustomer(
                 customer_id=customer_id,

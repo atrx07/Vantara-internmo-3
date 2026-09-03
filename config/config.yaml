@@ -268,3 +268,33 @@ dashboard:
   forecast_periods: 6
   seasonal_periods: 12
   leaderboard_limit: 250
+
+clv_remediation:
+  model_version: vantara-clv-production-v2
+  supersedes: vantara-clv-production-v1
+  target: 180-day forward revenue-based CLV proxy
+  selection_basis: grouped development-only evaluation
+  original_held_out_test_reused: false
+  horizon_days: 180
+  cutoff_frequency: MS
+  initial_history_days: 120
+  minimum_customer_history_days: 60
+  minimum_history_orders: 2
+  cv_folds: 5
+  stratification_bins: 10
+  catastrophic_fold_r2: -0.50
+  bulk_order_units: 10
+  high_value_order_gbp: 100.0
+  dataset_path: data/processed/clv_v2_rolling_snapshots.parquet
+  evidence_directory: reports/clv_remediation
+  artifact_path: models_artifacts/clv/production_clv_v2.joblib
+  xgboost:
+    n_estimators: 360
+    max_depth: 3
+    learning_rate: 0.035
+    min_child_weight: 8
+    subsample: 0.85
+    colsample_bytree: 0.90
+    reg_alpha: 0.05
+    reg_lambda: 12.0
+  tweedie_variance_power: 1.5

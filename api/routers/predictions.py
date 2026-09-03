@@ -83,8 +83,9 @@ def predict_batch(
                 customer_id=item.customer_id,
                 country=item.country,
                 feature_as_of=item.as_of.to_pydatetime(),
-                feature_schema_version=str(
-                    request.app.state.artifacts.freeze["feature_schema_version"]
+                feature_schema_version=(
+                    f"{request.app.state.artifacts.freeze['feature_schema_version']}+"
+                    f"{request.app.state.artifacts.clv['metadata']['feature_schema_version']}"
                 ),
                 feature_payload=item.features,
                 sequence_payload=item.sequence,

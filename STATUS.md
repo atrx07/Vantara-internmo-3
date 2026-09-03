@@ -2,6 +2,31 @@
 
 > MUTABLE STATE FILE. Codex may edit this file. It must contain observed facts and evidence, never optimistic assumptions.
 
+## STEP 08R — CLV Remediation + Production Re-freeze
+
+- Authorization: owner explicitly authorized exceptional STEP 08R remediation before STEP 09; this is a factual owner-directed roadmap exception and does not authorize STEP 09.
+- Scope status: `STEP_COMPLETE_WAITING_FOR_APPROVAL`.
+- Pre-step HEAD: `2d29dc4fffcb533db144ee4c3c356858b1a03878` (`step-08: add Streamlit dashboard and auditable reports`); pre-step local `HEAD` and `origin/main` matched.
+- Scope boundary: no STEP 09 Docker, benchmark, final documentation/report, handover, clean-clone, or final acceptance work was started. The original STEP 06 held-out evaluator was not invoked and no original test-customer truth/prediction rows were read for remediation development.
+- Development population: only original `train` and `validation` customer partitions were admitted. The generated dataset contains `29,258` monthly rolling snapshots from `2,840` customers (`2,339` original-train and `501` original-validation customers), spanning cutoffs `2010-04-01` through `2011-06-01`.
+- Held-out exclusion: all `744` original test customers were excluded before snapshot/feature/target construction; observed intersection is exactly `0`. Five-fold `StratifiedGroupKFold` keeps every customer's snapshots on one side of every fold.
+- Temporal safety: every feature uses rows strictly before its cutoff; every target uses the following `[cutoff, cutoff + 180 days)` window; every target window ends within the observed data. The target remains nonnegative 180-day forward net merchandise revenue.
+- CLV v2 features: `27` explicit temporal/customer features cover 30/60/90/180-day spend and orders, spend/order velocity, recent average/max/std order value, active months, tenure, recency, purchase-gap mean/std, return-value ratio, bulk/high-value behavior, and lifetime order/spend/net-revenue context. Imputation/scaling/model fitting is cloned and fitted inside each training fold.
+- Target distribution: zero rate `0.3280128512`; mean `GBP 1,221.04`; median `GBP 344.81`; p75 `GBP 1,061.94`; p90 `GBP 2,363.209`; p95 `GBP 3,910.154`; p99 `GBP 13,587.7719`; maximum `GBP 186,364.31`.
+- Candidate comparison: Tweedie XGBoost — eligible, mean/median/min/std CV R2 `0.5629683231 / 0.5359200408 / 0.3611606123 / 0.1290422244`, validation R2/MAE/RMSE `0.7888050930 / 772.1350517 / 3350.1474084`; hurdle XGBoost — eligible, `0.5447801386 / 0.5634742549 / 0.3599514496 / 0.1169087199`, validation `0.8431271879 / 747.7345440 / 2887.3274318`; log1p XGBoost — eligible, `0.4546134644 / 0.4469442672 / 0.3603101211 / 0.0567506404`, validation `0.4891250701 / 893.4311881 / 5210.5010978`; squared-error XGBoost — eligible, `0.3335751242 / 0.3195033698 / -0.1201550252 / 0.2637800001`, validation `0.8353815911 / 779.2238856 / 2957.7495437`; log1p Ridge — ineligible, `-2.4827101978 / 0.0929339799 / -12.7384390610 / 5.1470255562`, validation `0.6280052474 / 915.1995384 / 4446.2164695`.
+- Selection: `xgboost_tweedie` won primarily on the highest positive grouped-CV mean R2 with all five folds positive and no catastrophic fold. The higher single validation score of the hurdle model did not override the locked grouped-generalization ordering.
+- Production artifact: `models_artifacts/clv/production_clv_v2.joblib`, version `vantara-clv-production-v2`, SHA-256 `f95c4881c46ab698ab3647110b62d41a2c1a4b90d5efb5027c61c1c10fc811b3`, size `426,775` bytes, reload/inference PASS. It supersedes v1 for serving without overwriting or deleting v1.
+- Evidence: dataset summary, all 25 per-fold metric rows, five-candidate comparison, historical-integrity hashes, and separate v2 freeze record are under `reports/clv_remediation/`. The generated rolling dataset remains ignored under `data/processed/`.
+- Historical immutability: all seven `reports/final_evaluation/` files, `reports/model_freeze/model_freeze.json`, and `models_artifacts/clv/production_clv.joblib` match their pre-remediation SHA-256 values byte-for-byte. The permanent STEP 06 evaluator lock still refuses a second attempt.
+- Serving integration: startup independently validates the v2 freeze/artifact hash and metadata; persisted and uploaded-customer payloads receive the v2 temporal features; CLV predictions use only the v2 artifact; persisted response model version includes `vantara-clv-production-v2`. The v1 artifact remains present for audit history.
+- Dashboard integration: the model-insights view consumes the v2 candidate comparison, identifies v2 as active, displays development-only CV/validation evidence, and separately preserves the historical v1 held-out R2 warning without claiming a new final-test result.
+- Focused remediation/API/dashboard validation: PASS — `30 passed` before the final persisted-evidence/dashboard assertions were added; final remediation-only suite `8 passed`; exact API v2 metadata/scoring and Streamlit v2/v1 evidence labels are covered.
+- Full repository validation: `pytest --cov=src --cov=api --cov-report=term-missing --cov-fail-under=70 -q` PASS — `98 passed`, `41 warnings`, combined branch coverage `77.01%`.
+- Quality gates: Ruff PASS; Black PASS (`85` Python files unchanged); `pip check` PASS; compileall PASS; governance reference lock PASS for all `30` immutable files.
+- Dependency/environment state: no dependency was installed and no dependency manifest changed. Local MLflow recorded development-only candidate runs and remains ignored/untracked.
+- Raw-data audit: root and canonical raw workbooks retain SHA-256 `bcbe73b35f5b7babf197fb0cb983a11f5d9ff929078d4aa53d171b1f2df2e980`; both remain ignored and untracked.
+- Evidence limitation: v2 materially improves stable development evidence, but the original held-out test was deliberately not reused. Therefore v2 has no new final held-out metric and must not be described as having achieved the PRD held-out R2 target.
+
 ## STEP 08 — Streamlit Dashboard + Reports
 
 - Authorization: owner explicitly approved continuation into STEP 08 with `continue` and later resumed the same step after usage-limit interruptions.
@@ -388,9 +413,9 @@
 
 - Project status: INCOMPLETE
 - Current milestone: M3 — Product Ready
-- Current step: STEP 08 — Streamlit Dashboard + Reports
+- Current step: STEP 08R — CLV Remediation + Production Re-freeze
 - Step state: `STEP_COMPLETE_WAITING_FOR_APPROVAL`
-- Last owner-approved step: STEP 08
+- Last owner-approved step: STEP 08R
 - M0 Governance Ready: PASS
 - M1 Data Ready: PASS
 - M2 Intelligence Ready: PASS
@@ -418,6 +443,8 @@
 - STEP 07 full repository test/coverage gate — PASS — `72 passed`, combined `src` + `api` branch coverage `78.45%`.
 - STEP 08 live visual/API/report audit — PASS — all seven required views, filters, customer scoring/XAI, batch upload, CSV/PDF downloads, model insights, report rendering, and browser-console checks completed successfully.
 - STEP 08 full repository test/coverage gate — PASS — `89 passed`, combined `src` + `api` branch coverage `78.85%`.
+- STEP 08R development-only remediation — PASS — `29,258` rolling snapshots, zero original-test-customer overlap, all complete 180-day horizons, all grouped folds isolated, and production v2 selected from stable positive-CV evidence.
+- STEP 08R full repository test/coverage gate — PASS — `98 passed`, combined `src` + `api` branch coverage `77.01%`.
 
 ## Commits / pushes
 
@@ -437,6 +464,7 @@
 - STEP 06 implementation/state commit: this record will be committed with the green STEP 06 implementation; its exact hash and pushed ref are reported in the chat handoff because a commit cannot contain its own hash.
 - STEP 07 implementation/state commit: this record is committed with the green STEP 07 implementation; its exact hash and pushed ref are reported in the chat handoff because a commit cannot contain its own hash.
 - STEP 08 implementation/state commit: this record is committed with the green STEP 08 implementation; its exact hash and pushed ref are reported in the chat handoff because a commit cannot contain its own hash.
+- STEP 08R remediation/state commit: this record is committed with the green owner-authorized exceptional remediation; its exact hash and pushed ref are reported in the chat handoff because a commit cannot contain its own hash.
 
 ## Blockers / warnings
 
@@ -451,6 +479,7 @@
 - Warning: ANN validation ROC-AUC is `0.7920673077`, below the final held-out target `0.80`; STEP 06 selection may still prefer a classical model, and no final metric claim is made.
 - Warning: LSTM validation recall is `0.5895287958`; this is preserved honestly at the fixed comparison threshold and was not manipulated using test data.
 - Warning: CLV held-out R2 is `0.0307371581`, below the PRD target `0.60`; the result is final, is not eligible for test-set-driven retuning, and must be discussed in the final report as permitted by the acceptance contract.
+- Warning: CLV v2 has materially stronger development-only grouped evidence, but no new held-out metric because reuse of the original test was prohibited; the historical v1 held-out miss remains the only final CLV test evidence.
 - Warning: the held-out final evaluation is permanently consumed at one attempt; neither the evaluator nor the model freeze may be rerun to change final evidence.
 - Warning: Docker remains unavailable on this host and was not a STEP 08 gate; Docker Compose and its live validation belong to STEP 09.
 
@@ -464,5 +493,6 @@
 - STEP 06 implementation, validation-only selection, model freeze, explainability, single held-out evaluation, and evidence: COMPLETE. This record accompanies the owner-authorized green STEP 06 commit/push; its exact Git evidence is reported in the chat handoff.
 - STEP 07 database schema/migration, deterministic initialization, API, persistence, and validation: COMPLETE. This record accompanies the owner-authorized green STEP 07 commit/push; its exact Git evidence is reported in the chat handoff.
 - STEP 08 dashboard, API-only analytics integration, filters, customer XAI, forecast, batch scoring, CSV/PDF reports, tests, and visual QA: COMPLETE. This record accompanies the owner-authorized green STEP 08 commit/push; its exact Git evidence is reported in the chat handoff.
+- STEP 08R exceptional CLV rolling dataset, stable grouped evaluation, separate v2 freeze, historical-integrity guard, API/dashboard integration, and validation: COMPLETE. This record accompanies the owner-authorized green remediation commit/push; its exact Git evidence is reported in the chat handoff.
 - STEP 09 is NOT AUTHORIZED.
 - After a green push, next authorized action: WAIT FOR OWNER APPROVAL.

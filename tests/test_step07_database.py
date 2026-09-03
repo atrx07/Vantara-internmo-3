@@ -68,8 +68,12 @@ def test_database_foreign_keys_and_customer_state(migrated_runtime: dict[str, ob
         assert session.scalar(select(func.count()).select_from(Recommendation)) == 24760
         customer = session.scalar(select(Customer).order_by(Customer.customer_id).limit(1))
         assert customer is not None
-        assert customer.feature_schema_version == "vantara-churn-features-v1"
-        assert len(customer.feature_payload) == 47
+        assert customer.feature_schema_version == (
+            "vantara-churn-features-v1+vantara-clv-features-v2"
+        )
+        registry = migrated_runtime["registry"]
+        required_features = set(registry.feature_names) | set(registry.clv_feature_names)
+        assert set(customer.feature_payload) == required_features
         assert len(customer.recommendations) == 5
 
 

@@ -112,7 +112,15 @@ class FakeDashboardAPI:
                 "model": "random_forest",
                 "held_out_metrics": {"roc_auc": 0.813, "recall": 0.98},
             },
-            "clv": {"held_out_metrics": {"r2": 0.031}},
+            "clv": {
+                "model": "xgboost_tweedie",
+                "version": "vantara-clv-production-v2",
+                "development_metrics": {
+                    "cv_r2_mean": 0.563,
+                    "validation_r2": 0.789,
+                },
+                "historical_v1_held_out_metrics": {"r2": 0.031},
+            },
         }
 
     def churn_partial_dependence(self) -> str:
@@ -340,6 +348,18 @@ def test_customer_search_renders_score_xai_and_recommendations() -> None:
     assert len(dashboard.metric) == 4
     assert any("strongest model drivers" in element.value for element in dashboard.markdown)
     assert any("TreeSHAP" in element.value for element in dashboard.caption)
+
+
+def test_model_insights_identifies_active_v2_and_historical_v1_limit() -> None:
+    """The dashboard distinguishes active development evidence from immutable v1 test evidence."""
+    dashboard = AppTest.from_function(
+        _render_harness,
+        args=("Model insights", FakeDashboardAPI()),
+        default_timeout=15,
+    ).run(timeout=15)
+    assert not dashboard.exception
+    assert any("vantara-clv-production-v2" in element.value for element in dashboard.success)
+    assert any("Historical v1 limitation" in element.value for element in dashboard.warning)
 
 
 @pytest.mark.parametrize(

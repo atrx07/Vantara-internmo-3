@@ -1,0 +1,17 @@
+{
+  "files": {
+    "autoencoder_test_scores.csv": "e989e823d1a099dee4783c4596381e6ddf1c7bbf06c540ba7cc1d07e86a30f7f",
+    "churn_test_predictions.csv": "0867f8c0be0fe30ef89e90de358f62ee6071be67c09fc68d4ddaf9448196d5ba",
+    "clv_test_predictions.csv": "217c4d4f98d5c089bb84b15595523941ed3ec338762cd1470b9d80bd42f54cce",
+    "final_evaluation_execution_lock.json": "8b058205ba593c52587b57e6575f0303eaeaf60b22e89c7c68ce2e4273f91ca3",
+    "final_metrics.json": "872cc6f549db63a8d9728aaa8bd4796b67507569bb5c5e846bbdfa4458df3a46",
+    "lstm_test_predictions.csv": "69c360551853c51cc9b5e2aaa9e20df415091774a06b41bc38e2382863ae937b",
+    "next_category_test_predictions.csv": "19a1d92a1ab7352f4202344419db6135e99fd2b11cea2b24df49b343b305dad6"
+  },
+  "original_held_out_test_reused": false,
+  "status": "PASS",
+  "v1_history": {
+    "models_artifacts/clv/production_clv.joblib": "b306ef3e2435baafbec93b1d113faeff1e6cd8a3d5eeea9f1f14ea00b97dd6eb",
+    "reports/model_freeze/model_freeze.json": "be64ed61ab5d4dc5f0a849a4101a4d5aa986ecf8d3bbbc24cce5e91e5562ba84"
+  }
+}

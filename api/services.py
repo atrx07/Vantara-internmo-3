@@ -27,7 +27,7 @@ def persist_score(
     now = datetime.now(UTC)
     prediction = Prediction(
         customer_id=customer.customer_id,
-        model_version=str(registry.freeze["freeze_version"]),
+        model_version=registry.serving_version,
         scored_at=now,
         as_of_timestamp=customer.feature_as_of,
         churn_probability=_decimal(score.churn_probability),

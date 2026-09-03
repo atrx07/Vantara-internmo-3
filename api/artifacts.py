@@ -63,9 +63,18 @@ class ArtifactRegistry:
         if not freeze_path.is_file():
             raise ArtifactCompatibilityError(f"Missing model freeze record: {freeze_path}")
         self.freeze: dict[str, Any] = json.loads(freeze_path.read_text(encoding="utf-8"))
+        clv_freeze_path = (
+            self.project_root / "reports" / "clv_remediation" / "production_clv_v2_freeze.json"
+        )
+        if not clv_freeze_path.is_file():
+            raise ArtifactCompatibilityError(f"Missing CLV v2 freeze record: {clv_freeze_path}")
+        self.clv_freeze: dict[str, Any] = json.loads(clv_freeze_path.read_text(encoding="utf-8"))
         self._validate_inventory()
         self.churn = joblib.load(self.artifact_root / "churn" / "production_churn.joblib")
-        self.clv = joblib.load(self.artifact_root / "clv" / "production_clv.joblib")
+        clv_path = self.artifact_root / "clv" / "production_clv_v2.joblib"
+        if _sha256(clv_path) != str(self.clv_freeze["artifact_sha256"]):
+            raise ArtifactCompatibilityError(f"CLV v2 artifact hash mismatch: {clv_path}")
+        self.clv = joblib.load(clv_path)
         self.next_category = joblib.load(
             self.artifact_root / "next_category" / "next_category_lightgbm.joblib"
         )
@@ -100,6 +109,12 @@ class ArtifactRegistry:
             self.artifact_root / "autoencoder" / "behavioral_autoencoder.pt"
         )
         self.feature_names = tuple(str(value) for value in self.churn["metadata"]["feature_names"])
+        self.clv_feature_names = tuple(
+            str(value) for value in self.clv["metadata"]["feature_names"]
+        )
+        self.serving_version = (
+            f"{self.freeze['freeze_version']}+{self.clv['metadata']['model_version']}"
+        )
         self._validate_metadata()
         churn_pipeline = self.churn["pipeline"]
         self.churn_explainer = shap.TreeExplainer(churn_pipeline.named_steps["model"])
@@ -109,7 +124,7 @@ class ArtifactRegistry:
         paths = {
             "global_churn_importance": "reports/explainability/churn_global_shap_importance.csv",
             "churn_comparison": "reports/modeling/churn_model_comparison.csv",
-            "clv_comparison": "reports/modeling/clv_model_comparison.csv",
+            "clv_comparison": "reports/clv_remediation/candidate_comparison.csv",
             "next_category_evaluation": "reports/modeling/next_category_evaluation.csv",
             "recommender_evaluation": "reports/modeling/recommender_evaluation.csv",
             "segment_profiles": "reports/modeling/segment_profiles.csv",
@@ -141,7 +156,7 @@ class ArtifactRegistry:
     def _validate_metadata(self) -> None:
         expected_schema = str(self.freeze["feature_schema_version"])
         expected_source = str(self.freeze["source_sha256"])
-        bundles = (self.churn, self.clv, self.next_category)
+        bundles = (self.churn, self.next_category)
         for bundle in bundles:
             metadata = bundle["metadata"]
             if str(metadata["feature_schema_version"]) != expected_schema:
@@ -150,6 +165,19 @@ class ArtifactRegistry:
                 raise ArtifactCompatibilityError("Serving artifact source hash mismatch")
             if tuple(str(value) for value in metadata["feature_names"]) != self.feature_names:
                 raise ArtifactCompatibilityError("Serving artifact feature order mismatch")
+        clv_metadata = self.clv["metadata"]
+        if str(clv_metadata["model_version"]) != "vantara-clv-production-v2":
+            raise ArtifactCompatibilityError("Serving CLV artifact is not production v2")
+        if str(clv_metadata["source_sha256"]) != expected_source:
+            raise ArtifactCompatibilityError("Serving CLV v2 source hash mismatch")
+        if str(clv_metadata["split_version"]) != str(self.freeze["split_version"]):
+            raise ArtifactCompatibilityError("Serving CLV v2 split mismatch")
+        if tuple(str(value) for value in clv_metadata["feature_names"]) != tuple(
+            str(value) for value in self.clv_freeze["feature_names"]
+        ):
+            raise ArtifactCompatibilityError("Serving CLV v2 feature order mismatch")
+        if clv_metadata.get("original_held_out_test_reused") is not False:
+            raise ArtifactCompatibilityError("CLV v2 metadata violates held-out-test safety")
         if str(self.segmentation["source_sha256"]) != expected_source:
             raise ArtifactCompatibilityError("Segmentation artifact source hash mismatch")
 
@@ -159,15 +187,20 @@ class ArtifactRegistry:
         sequence_payload: dict[str, object] | None,
     ) -> ScoreResult:
         """Score every available frozen model from persisted server-owned inputs."""
-        missing = sorted(set(self.feature_names).difference(feature_payload))
+        required = set(self.feature_names) | set(self.clv_feature_names)
+        missing = sorted(required.difference(feature_payload))
         if missing:
             raise ArtifactCompatibilityError(f"Customer feature payload is missing: {missing}")
         features = pd.DataFrame(
             [[feature_payload[name] for name in self.feature_names]], columns=self.feature_names
         )
+        clv_features = pd.DataFrame(
+            [[feature_payload[name] for name in self.clv_feature_names]],
+            columns=self.clv_feature_names,
+        )
         churn_probability = float(self.churn["pipeline"].predict_proba(features)[0, 1])
         threshold = float(self.freeze["production_churn"]["threshold"])
-        clv = max(float(self.clv["pipeline"].predict(features)[0]), 0.0)
+        clv = max(float(self.clv["pipeline"].predict(clv_features)[0]), 0.0)
 
         category_probabilities = self.next_category["pipeline"].predict_proba(features)[0]
         category_index = int(np.argmax(category_probabilities))
@@ -278,9 +311,13 @@ class ArtifactRegistry:
                 "held_out_metrics": metrics["churn"],
             },
             "clv": {
-                "model": self.freeze["production_clv"]["model"],
+                "model": self.clv["metadata"]["model_name"],
+                "version": self.clv["metadata"]["model_version"],
                 "business_label": "Predicted 180-Day Customer Value",
-                "held_out_metrics": metrics["clv"],
+                "selection_basis": self.clv["metadata"]["selection_basis"],
+                "original_held_out_test_reused": False,
+                "development_metrics": self.clv["metadata"]["metrics"],
+                "historical_v1_held_out_metrics": metrics["clv"],
             },
             "next_purchase": {
                 "model": self.freeze["production_next_purchase"]["model"],

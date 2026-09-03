@@ -14,6 +14,7 @@ from sqlalchemy.orm import Session
 from api.artifacts import ArtifactRegistry
 from api.batch import build_latest_sequence_payloads
 from api.models import Customer, Prediction, Recommendation, Segment, Transaction
+from src.models.clv_remediation import build_clv_features_for_cutoff
 
 
 def _value_tiers(values: pd.Series) -> pd.Series:
@@ -161,6 +162,13 @@ def initialize_serving_data(
         raise RuntimeError("Serving customer features must share one cutoff")
     cutoff = pd.Timestamp(cutoff_values.iloc[0])
     customer_ids = set(churn["customer_id"].astype(str))
+    clv_features = build_clv_features_for_cutoff(
+        transactions,
+        customer_ids=sorted(customer_ids),
+        cutoff=cutoff,
+        bulk_order_units=int(config["clv_remediation"]["bulk_order_units"]),
+        high_value_order_gbp=float(config["clv_remediation"]["high_value_order_gbp"]),
+    ).set_index("customer_id")
     sequences = build_latest_sequence_payloads(
         transactions,
         taxonomy,
@@ -187,13 +195,20 @@ def initialize_serving_data(
     segments: list[Segment] = []
     for (_, row), segment_id in zip(churn.iterrows(), segment_ids, strict=True):
         customer_id = str(row["customer_id"])
+        feature_payload = {name: float(row[name]) for name in registry.feature_names}
+        feature_payload.update(
+            {name: float(clv_features.at[customer_id, name]) for name in registry.clv_feature_names}
+        )
         customers.append(
             Customer(
                 customer_id=customer_id,
                 country=latest_country.get(customer_id),
                 feature_as_of=cutoff.to_pydatetime(),
-                feature_schema_version=str(registry.freeze["feature_schema_version"]),
-                feature_payload={name: float(row[name]) for name in registry.feature_names},
+                feature_schema_version=(
+                    f"{registry.freeze['feature_schema_version']}+"
+                    f"{registry.clv['metadata']['feature_schema_version']}"
+                ),
+                feature_payload=feature_payload,
                 sequence_payload=sequences.get(customer_id),
                 net_spend=float(row["net_spend"]),
                 value_tier=str(row["value_tier"]),

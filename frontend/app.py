@@ -650,11 +650,19 @@ def render_model_insights(api: DashboardAPI) -> None:
     for name, tab in tables:
         with tab:
             st.dataframe(pd.DataFrame(insights[name]), hide_index=True, use_container_width=True)
-    clv_metrics = metadata["clv"]["held_out_metrics"]
+    clv = metadata["clv"]
+    clv_metrics = clv["development_metrics"]
+    st.success(
+        f"Active CLV model: {clv['version']} ({clv['model']}). Development-only grouped CV "
+        f"mean R2 is {clv_metrics['cv_r2_mean']:.3f}; validation R2 is "
+        f"{clv_metrics['validation_r2']:.3f}. The original held-out test was not reused."
+    )
+    historical_metrics = clv["historical_v1_held_out_metrics"]
     st.warning(
-        f"Known limitation: held-out predicted-value R2 is {clv_metrics['r2']:.3f}, below the "
-        "0.60 project target. The genuine result is preserved and must not be used as a guaranteed "
-        "customer revenue estimate."
+        f"Historical v1 limitation: its immutable held-out R2 is "
+        f"{historical_metrics['r2']:.3f}, below the 0.60 project target. CLV v2 has not reused "
+        "that held-out set, so its development evidence must not be represented as a new "
+        "final-test result or a guaranteed customer revenue estimate."
     )
     st.caption(
         f"Freeze: {metadata['freeze_version']} | "
